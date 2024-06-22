@@ -1,0 +1,6 @@
+@eMuhasebeApi.WebAPI_HostAddress = http://localhost:5193
+
+GET {{eMuhasebeApi.WebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
