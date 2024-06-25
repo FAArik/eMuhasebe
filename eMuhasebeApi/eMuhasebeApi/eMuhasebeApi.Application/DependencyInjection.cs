@@ -1,4 +1,5 @@
 ﻿using eMuhasebeApi.Application.Behaviors;
+using eMuhasebeApi.Domain.Entities;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,11 +9,12 @@ namespace eMuhasebeApi.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddFluentEmail("info@muhasebe.com").AddSmtpSender("localhost",2525);
             services.AddAutoMapper(typeof(DependencyInjection).Assembly);
 
             services.AddMediatR(conf =>
             {
-                conf.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly);
+                conf.RegisterServicesFromAssemblies(typeof(DependencyInjection).Assembly,typeof(AppUser).Assembly);
                 conf.AddOpenBehavior(typeof(ValidationBehavior<,>));
             });
 
