@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ERPClient": {
+    "EMuhasebe": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -38,7 +38,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/erpclient",
+            "outputPath": "dist/EMuhasebe",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -83,10 +83,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ERPClient:build:production"
+              "buildTarget": "EMuhasebe:build:production"
             },
             "development": {
-              "buildTarget": "ERPClient:build:development"
+              "buildTarget": "EMuhasebe:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -94,7 +94,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ERPClient:build"
+            "buildTarget": "EMuhasebe:build"
           }
         },
         "test": {
@@ -117,5 +117,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

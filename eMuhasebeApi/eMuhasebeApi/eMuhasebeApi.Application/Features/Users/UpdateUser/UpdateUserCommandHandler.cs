@@ -60,6 +60,6 @@ internal sealed class UpdateUserCommandHandler(UserManager<AppUser>  userManager
             //todo tekrar mail onayı
             await mediator.Publish(new AppUserEvent(appUser.Id));
         }
-        return "Kullanıcı başarıyla oluşturuldu";
+        return "Kullanıcı başarıyla güncellendi";
     } 
 }
