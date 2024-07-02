@@ -14,8 +14,6 @@ export class UserPipe implements PipeTransform {
       p.fullName.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
       p.userName.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
       p.email.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-
     );
   }
-
 }

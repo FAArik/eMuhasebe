@@ -28,4 +28,12 @@ export const Menus: MenuModel[] = [
         isTitle: false,
         subMenus: []
     }
+    ,
+    {
+        name: "Şirketler",
+        icon: "fa-solid fa-city",
+        url: "/companies",
+        isTitle: false,
+        subMenus: []
+    }
 ]

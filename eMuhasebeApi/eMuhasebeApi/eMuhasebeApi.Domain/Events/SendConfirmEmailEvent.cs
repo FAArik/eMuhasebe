@@ -19,7 +19,7 @@ public class SendConfirmEmailEvent(UserManager<AppUser> userManager, IFluentEmai
         }
     }
 
-    private static string CreateBody(AppUser appUser)
+    private string CreateBody(AppUser appUser)
     {
         return $@"Mail adresinizi onaylamak için aşşağıdaki linke tıklayın.
                        <a href='http://localhost:4200/confirm-email/{appUser.Email}' target='_blank'>Onaylamak için tıklayın</a>";
