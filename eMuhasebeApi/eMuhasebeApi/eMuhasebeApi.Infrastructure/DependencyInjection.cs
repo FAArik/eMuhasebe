@@ -1,4 +1,5 @@
 ﻿using eMuhasebeApi.Domain.Entities;
+using eMuhasebeApi.Domain.Repositories;
 using eMuhasebeApi.Infrastructure.Context;
 using eMuhasebeApi.Infrastructure.Options;
 using GenericRepository;
@@ -15,12 +16,14 @@ namespace eMuhasebeApi.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddScoped<CompanyDbContext>();
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("SqlServer"));
             });
 
             services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
+            services.AddScoped<IUnitOfWorkCompany>(srv => srv.GetRequiredService<CompanyDbContext>());
 
             services
                 .AddIdentity<AppUser, IdentityRole<Guid>>(cfr =>
