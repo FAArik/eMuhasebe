@@ -1,6 +1,7 @@
 ﻿using eMuhasebeApi.Application.Features.Companies.CreateCompany;
 using eMuhasebeApi.Application.Features.Companies.DeleteCompanyById;
 using eMuhasebeApi.Application.Features.Companies.GetAllCompanies;
+using eMuhasebeApi.Application.Features.Companies.MigrateAllCompanies;
 using eMuhasebeApi.Application.Features.Companies.UpdateCompany;
 using eMuhasebeApi.Application.Features.Users.DeleteUserById;
 using eMuhasebeApi.WebAPI.Abstractions;
@@ -39,6 +40,13 @@ public sealed class CompaniesController : ApiController
     [HttpPost]
     public async Task<IActionResult> DeleteCompanyById(DeleteCompanyByIdCommand command, CancellationToken cancellationToken)
     {
+        var response = await _mediator.Send(command, cancellationToken);
+        return StatusCode(response.StatusCode, response);
+    }
+    [HttpGet]
+    public async Task<IActionResult> MigrateAll(CancellationToken cancellationToken)
+    {
+        MigrateAllCompaniesCommand command = new();
         var response = await _mediator.Send(command, cancellationToken);
         return StatusCode(response.StatusCode, response);
     }
