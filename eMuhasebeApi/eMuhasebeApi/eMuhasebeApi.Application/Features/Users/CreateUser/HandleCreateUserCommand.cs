@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Events;
+using eMuhasebeApi.Domain.Repositories;
+using GenericRepository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +10,7 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Users.CreateUser;
 
-internal sealed class HandleCreateUserCommand(UserManager<AppUser> userManager, IMapper mapper,IMediator mediator) : IRequestHandler<CreateUserCommand, Result<string>>
+internal sealed class HandleCreateUserCommand(UserManager<AppUser> userManager, IMapper mapper, IMediator mediator,ICompanyUserRepository companyUserRepository,IUnitOfWork unitOfWork) : IRequestHandler<CreateUserCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
@@ -27,7 +29,17 @@ internal sealed class HandleCreateUserCommand(UserManager<AppUser> userManager, 
         IdentityResult identityResult = await userManager.CreateAsync(appUser, request.Password);
         if (!identityResult.Succeeded)
         {
-            return Result<string>.Failure(identityResult.Errors.Select(x => x.Description).ToList()); 
+            return Result<string>.Failure(identityResult.Errors.Select(x => x.Description).ToList());
+        }
+        if (request.CompanyIds != null)
+        {
+            List<CompanyUser> companyUsers = request.CompanyIds.Select(x => new CompanyUser
+            {
+                AppUserId = appUser.Id,
+                CompanyId = x
+            }).ToList();
+            await companyUserRepository.AddRangeAsync(companyUsers, cancellationToken);
+            await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
         //todo onay maili gönderme

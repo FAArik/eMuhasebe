@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Events;
+using eMuhasebeApi.Domain.Repositories;
+using GenericRepository;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,17 +10,17 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Users.UpdateUser;
 
-internal sealed class UpdateUserCommandHandler(UserManager<AppUser>  userManager,IMapper mapper,IMediator mediator) : IRequestHandler<UpdateUserCommand, Result<string>>
+internal sealed class UpdateUserCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IMediator mediator, ICompanyUserRepository companyUserRepository, IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        AppUser? appUser = await userManager.FindByIdAsync(request.Id.ToString());
+        AppUser? appUser = await userManager.Users.Where(x => x.Id == request.Id).Include(x => x.CompanyUsers).FirstOrDefaultAsync();
         bool isMailChanged = false;
-        if (appUser==null)
+        if (appUser == null)
         {
             return Result<string>.Failure("Kullanıcı Bulunamadı");
         }
-        if(appUser.UserName!=request.UserName)
+        if (appUser.UserName != request.UserName)
         {
             bool isUserNameExist = await userManager.Users.AnyAsync(x => x.UserName == request.UserName, cancellationToken);
             if (isUserNameExist)
@@ -26,7 +28,7 @@ internal sealed class UpdateUserCommandHandler(UserManager<AppUser>  userManager
                 return Result<string>.Failure("Bu kullanıcı adı daha önce kullanılmış");
             }
         }
-        if (appUser.Email!=request.Email)
+        if (appUser.Email != request.Email)
         {
             bool isEmailExist = await userManager.Users.AnyAsync(x => x.Email == request.Email, cancellationToken);
             if (isEmailExist)
@@ -34,32 +36,41 @@ internal sealed class UpdateUserCommandHandler(UserManager<AppUser>  userManager
                 return Result<string>.Failure("Bu mail adresi daha önce kullanılmış");
             }
             isMailChanged = true;
-            appUser.EmailConfirmed=false;
+            appUser.EmailConfirmed = false;
 
         }
 
         mapper.Map(request, appUser);
 
-        IdentityResult identityResult= await userManager.UpdateAsync(appUser);
+        IdentityResult identityResult = await userManager.UpdateAsync(appUser);
 
         if (!identityResult.Succeeded)
         {
             return Result<string>.Failure(identityResult.Errors.Select(x => x.Description).ToList());
         }
-        if (request.Password!=null)
+        if (request.Password != null)
         {
             string Token = await userManager.GeneratePasswordResetTokenAsync(appUser);
             identityResult = await userManager.ResetPasswordAsync(appUser, Token, request.Password);
         }
         if (!identityResult.Succeeded)
         {
-            return Result<string>.Failure(identityResult.Errors.Select(x=>x.Description).ToList()) ;
+            return Result<string>.Failure(identityResult.Errors.Select(x => x.Description).ToList());
         }
+        companyUserRepository.DeleteRange(appUser.CompanyUsers);
+        List<CompanyUser> companyUsers = request.CompanyIds.Select(x => new CompanyUser
+        {
+            AppUserId = appUser.Id,
+            CompanyId = x
+        }
+        ).ToList();
+        await companyUserRepository.AddRangeAsync(companyUsers);
+        await unitOfWork.SaveChangesAsync();
         if (isMailChanged)
         {
             //todo tekrar mail onayı
             await mediator.Publish(new AppUserEvent(appUser.Id));
         }
         return "Kullanıcı başarıyla güncellendi";
-    } 
+    }
 }

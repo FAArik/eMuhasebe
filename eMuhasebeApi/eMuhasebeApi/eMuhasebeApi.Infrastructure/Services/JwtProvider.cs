@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace eMuhasebeApi.Infrastructure.Services
 {
@@ -15,7 +16,7 @@ namespace eMuhasebeApi.Infrastructure.Services
         UserManager<AppUser> userManager,
         IOptions<JwtOptions> jwtOptions) : IJwtProvider
     {
-        public async Task<LoginCommandResponse> CreateToken(AppUser user, Guid? companyId)
+        public async Task<LoginCommandResponse> CreateToken(AppUser user, Guid? companyId, List<Company> companies)
         {
             List<Claim> claims = new()
             {
@@ -23,7 +24,8 @@ namespace eMuhasebeApi.Infrastructure.Services
                 new Claim("Name", user.FullName),
                 new Claim("Email", user.Email ?? ""),
                 new Claim("UserName", user.UserName ?? ""),
-                new Claim("CompanyId", companyId.ToString() ?? string.Empty)
+                new Claim("CompanyId", companyId.ToString() ?? string.Empty),
+                new Claim("Companies",JsonSerializer.Serialize(companies))
             };
 
             DateTime expires = DateTime.UtcNow.AddMonths(1);

@@ -6,6 +6,9 @@ export class CompanyModel {
     taxNumber: string = "";
     isDeleted: boolean = false;
     database: DatabaseModel = new DatabaseModel();
+
+    Id:string="";
+    Name:string="";
 }
 
 export class DatabaseModel {

@@ -5,6 +5,7 @@ import { HttpService } from '../../services/http.service';
 import { SwalService } from '../../services/swal.service';
 import { UserPipe } from '../../pipes/user.pipe';
 import { SharedModule } from '../../modules/shared.module';
+import { CompanyModel } from '../../models/company.model';
 
 @Component({
   selector: 'app-users',
@@ -15,6 +16,7 @@ import { SharedModule } from '../../modules/shared.module';
 })
 export class UsersComponent implements OnInit {
   users: UserModel[] = [];
+  companies:CompanyModel[]=[];
   search: string = "";
 
   @ViewChild("createModalCloseBtn") createModalCloseBtn: ElementRef<HTMLButtonElement> | undefined;
@@ -30,11 +32,17 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAll();
+    this.getAllCompanies();
   }
 
   getAll() {
     this.http.post<UserModel[]>("Users/GetAll", {}, (res) => {
       this.users = res;
+    });
+  }
+  getAllCompanies() {
+    this.http.post<CompanyModel[]>("Companies/GetAll", {}, (res) => {
+      this.companies = res;
     });
   }
 
@@ -60,6 +68,7 @@ export class UsersComponent implements OnInit {
 
   get(model: UserModel) {
     this.updateModel = { ...model };
+    this.updateModel.companyIds=this.updateModel.companyUsers.map(x=>x.companyId);
   }
 
   update(form: NgForm) {

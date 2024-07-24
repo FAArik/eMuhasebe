@@ -1,5 +1,6 @@
 ﻿using eMuhasebeApi.Application.Services;
 using eMuhasebeApi.Domain.Entities;
+using eMuhasebeApi.Domain.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ namespace eMuhasebeApi.Application.Features.Auth.Login
     internal sealed class LoginCommandHandler(
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
+        ICompanyUserRepository companyUserRepository,
         IJwtProvider jwtProvider) : IRequestHandler<LoginCommand, Result<LoginCommandResponse>>
     {
         public async Task<Result<LoginCommandResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -46,7 +48,27 @@ namespace eMuhasebeApi.Application.Features.Auth.Login
                 return (500, "Şifreniz yanlış");
             }
 
-            var loginResponse = await jwtProvider.CreateToken(user, null);
+            List<CompanyUser> companyUsers = await companyUserRepository
+                .Where(x => x.AppUserId == user.Id)
+                .Include(x => x.Company)
+                .ToListAsync();
+            List<Company> companies = new();
+            Guid? companyId = null;
+
+            if (companyUsers.Count > 0)
+            {
+                companyId = companyUsers.First().CompanyId;
+                companies = companyUsers.Select(x => new Company
+                {
+                    Id = x.CompanyId,
+                    Name = x.Company!.Name,
+                    TaxDepartment = x.Company!.TaxDepartment,
+                    TaxNumber = x.Company!.TaxNumber,
+                    FullAddress = x.Company!.FullAddress,
+                }
+                ).ToList();
+            }
+            var loginResponse = await jwtProvider.CreateToken(user, companyId, companies);
 
 
             return loginResponse;

@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace eMuhasebeApi.Infrastructure.Context
 {
-    internal sealed class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>, IUnitOfWork
+    public sealed class ApplicationDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>, IUnitOfWork
     {
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<CompanyUser> CompanyUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

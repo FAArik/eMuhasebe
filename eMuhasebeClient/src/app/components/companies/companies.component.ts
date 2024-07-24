@@ -37,6 +37,11 @@ export class CompaniesComponent {
       this.companies = res;
     });
   }
+  migrateCompanyDatabases() {
+    this.http.post<CompanyModel[]>("Companies/MigrateAll",{},(res:any) => {
+      this.companies = res;
+    });
+  }
 
   create(form: NgForm) {
     if (form.valid) {

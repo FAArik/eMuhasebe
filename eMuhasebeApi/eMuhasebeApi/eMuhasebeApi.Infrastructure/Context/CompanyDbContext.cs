@@ -22,7 +22,7 @@ internal sealed class CompanyDbContext : DbContext,IUnitOfWorkCompany
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlServer("");
+        optionsBuilder.UseSqlServer(connectionString);
     }
     private void CreateConnectionString(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context)
     {
