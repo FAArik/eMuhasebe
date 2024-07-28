@@ -14,9 +14,9 @@ export class AuthService {
     private router: Router
   ) { }
 
-  isAuthenticated(){
+  isAuthenticated() {
     this.token = localStorage.getItem("token") ?? "";
-    if(this.token === ""){
+    if (this.token === "") {
       this.router.navigateByUrl("/login");
       return false;
     }
@@ -25,7 +25,7 @@ export class AuthService {
     const exp = decode.exp;
     const now = new Date().getTime() / 1000;
 
-    if(now > exp){
+    if (now > exp) {
       this.router.navigateByUrl("/login");
       return false;
     }
@@ -36,6 +36,8 @@ export class AuthService {
     this.user.userName = decode["UserName"];
     this.user.companyId = decode["CompanyId"];
     this.user.companies = JSON.parse(decode["Companies"]);
+    console.log(decode);
+    console.log(JSON.parse(decode["Companies"]));
 
     return true;
   }
