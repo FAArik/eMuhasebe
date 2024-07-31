@@ -1,11 +1,15 @@
-﻿using eMuhasebeApi.Domain.Entities;
+﻿using eMuhasebeApi.Application.Services;
+using eMuhasebeApi.Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Users.DeleteUserById;
 
-internal sealed class DeleteUserByIdCommandHandler(UserManager<AppUser> userManager) : IRequestHandler<DeleteUserByIdCommand, Result<string>>
+internal sealed class DeleteUserByIdCommandHandler(
+    UserManager<AppUser> userManager,
+    ICacheService cacheService
+    ) : IRequestHandler<DeleteUserByIdCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(DeleteUserByIdCommand request, CancellationToken cancellationToken)
     {
@@ -22,6 +26,9 @@ internal sealed class DeleteUserByIdCommandHandler(UserManager<AppUser> userMana
         {
             return Result<string>.Failure(identityResult.Errors.Select(x => x.Description).ToList());
         }
+
+        cacheService.Remove("users");
+
         return "Kullanıcı başarıyla silindi";
     }
 }

@@ -10,8 +10,9 @@ export class UserModel {
     password: string | null = "";
     userName: string = "";
     email: string = "";
-    companyId:string="";
+    companyId: string = "";
     companyIds: string[] = [];
     companyUsers: CompanyUserModel[] = [];
-    companies:CompanyModel[] = [];
+    companies: CompanyModel[] = [];
+    isAdmin: boolean = false;
 }

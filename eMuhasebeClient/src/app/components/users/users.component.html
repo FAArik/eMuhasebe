@@ -31,6 +31,7 @@
             <th>UserName</th>
             <th>Mail adresi</th>
             <th>Bağlı olduğu şirketler</th>
+            <th>Admin mi ?</th>
             <th>İşlemler</th>
           </tr>
         </thead>
@@ -48,6 +49,11 @@
                 }
               </ul>
             </td>
+            @if(data.isAdmin){
+            <td class="text-success">Evet</td>
+            }@else {
+            <td class="text-danger">Hayır</td>
+            }
             <td>
               <button
                 data-toggle="modal"
@@ -145,7 +151,6 @@
             />
             <div class="invalid-feedback"></div>
           </div>
-
           <div class="form-group mt-2">
             <label>Şifre</label>
             <input
@@ -170,6 +175,16 @@
               <option [value]="company.id">{{ company.name }}</option>
               }
             </select>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label>Adömin mi ?</label>
+            <input
+              [(ngModel)]="createModel.isAdmin"
+              class="form-check-input"
+              type="checkbox"
+              name="isAdmin"
+            />
             <div class="invalid-feedback"></div>
           </div>
         </div>
@@ -278,6 +293,16 @@
               <option [value]="company.id">{{ company.name }}</option>
               }
             </select>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="form-group mt-2">
+            <label>Adömin mi ?</label>
+            <input
+              [(ngModel)]="updateModel.isAdmin"
+              class="form-check-input"
+              type="checkbox"
+              name="isAdmin"
+            />
             <div class="invalid-feedback"></div>
           </div>
         </div>

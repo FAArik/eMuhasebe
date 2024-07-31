@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eMuhasebeApi.Application.Services;
 using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Events;
 using eMuhasebeApi.Domain.Repositories;
@@ -10,7 +11,14 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Users.UpdateUser;
 
-internal sealed class UpdateUserCommandHandler(UserManager<AppUser> userManager, IMapper mapper, IMediator mediator, ICompanyUserRepository companyUserRepository, IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserCommand, Result<string>>
+internal sealed class UpdateUserCommandHandler(
+    UserManager<AppUser> userManager,
+    IMapper mapper,
+    IMediator mediator,
+    ICompanyUserRepository companyUserRepository,
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService
+    ) : IRequestHandler<UpdateUserCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
@@ -66,11 +74,15 @@ internal sealed class UpdateUserCommandHandler(UserManager<AppUser> userManager,
         ).ToList();
         await companyUserRepository.AddRangeAsync(companyUsers);
         await unitOfWork.SaveChangesAsync();
+
+        cacheService.Remove("users");
+
         if (isMailChanged)
         {
             //todo tekrar mail onayı
             await mediator.Publish(new AppUserEvent(appUser.Id));
         }
+
         return "Kullanıcı başarıyla güncellendi";
     }
 }

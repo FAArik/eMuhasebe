@@ -1,4 +1,5 @@
-﻿using eMuhasebeApi.Domain.Entities;
+﻿using eMuhasebeApi.Application.Services;
+using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Repositories;
 using GenericRepository;
 using MediatR;
@@ -6,7 +7,7 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Companies.DeleteCompanyById;
 
-internal sealed class DeleteCompanyByIdCommandHandler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork) : IRequestHandler<DeleteCompanyByIdCommand, Result<string>>
+internal sealed class DeleteCompanyByIdCommandHandler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork, ICacheService cacheService) : IRequestHandler<DeleteCompanyByIdCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(DeleteCompanyByIdCommand request, CancellationToken cancellationToken)
     {
@@ -17,6 +18,9 @@ internal sealed class DeleteCompanyByIdCommandHandler(ICompanyRepository company
         }
         company.isDeleted = true;
         await unitOfWork.SaveChangesAsync();
+
+        cacheService.Remove("companies");
+
         return "Şirket başarıyla silindi";
     }
 }

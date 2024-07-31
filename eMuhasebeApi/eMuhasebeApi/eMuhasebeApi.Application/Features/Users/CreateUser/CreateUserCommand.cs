@@ -9,5 +9,6 @@ public sealed record CreateUserCommand(string FirstName,
     string UserName,
     string Email,
     string Password,
-    List<Guid>? CompanyIds
+    List<Guid>? CompanyIds,
+    bool isAdmin
     ) : IRequest<Result<string>>;

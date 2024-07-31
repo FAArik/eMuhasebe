@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eMuhasebeApi.Application.Services;
 using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Repositories;
 using GenericRepository;
@@ -7,7 +8,7 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Companies.UpdateCompany;
 
-internal sealed class UpdateCompanyCommandHandler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<UpdateCompanyCommand, Result<string>>
+internal sealed class UpdateCompanyCommandHandler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork, IMapper mapper,ICacheService cacheService) : IRequestHandler<UpdateCompanyCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
     {
@@ -26,6 +27,9 @@ internal sealed class UpdateCompanyCommandHandler(ICompanyRepository companyRepo
         }
         mapper.Map(request,company);
         await unitOfWork.SaveChangesAsync();
+
+        cacheService.Remove("companies");
+
         return "Şirket bilgisi güncellendi";
     }
 }

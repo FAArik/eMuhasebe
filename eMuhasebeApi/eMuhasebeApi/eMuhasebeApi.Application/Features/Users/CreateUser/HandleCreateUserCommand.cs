@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eMuhasebeApi.Application.Services;
 using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Events;
 using eMuhasebeApi.Domain.Repositories;
@@ -10,7 +11,13 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Users.CreateUser;
 
-internal sealed class HandleCreateUserCommand(UserManager<AppUser> userManager, IMapper mapper, IMediator mediator,ICompanyUserRepository companyUserRepository,IUnitOfWork unitOfWork) : IRequestHandler<CreateUserCommand, Result<string>>
+internal sealed class HandleCreateUserCommand(UserManager<AppUser> userManager,
+    IMapper mapper,
+    IMediator mediator,
+    ICompanyUserRepository companyUserRepository,
+    IUnitOfWork unitOfWork,
+    ICacheService cacheService
+    ) : IRequestHandler<CreateUserCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
@@ -42,7 +49,8 @@ internal sealed class HandleCreateUserCommand(UserManager<AppUser> userManager, 
             await unitOfWork.SaveChangesAsync(cancellationToken);
         }
 
-        //todo onay maili gönderme
+        cacheService.Remove("users");
+
         await mediator.Publish(new AppUserEvent(appUser.Id));
 
         return "Kullanıcı kaydı başarıyla tamamlandı";

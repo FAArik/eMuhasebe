@@ -9,7 +9,8 @@ namespace eMuhasebeApi.Domain.Entities
         public string FullName => string.Join(" ", FirstName, LastName);
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpires { get; set; }
-        public bool IsDeleted { get; set; }=false;
+        public bool IsDeleted { get; set; } = false;
         public List<CompanyUser>? CompanyUsers { get; set; } = null;
+        public bool isAdmin { get; set; } = false;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using eMuhasebeApi.Application.Services;
 using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Repositories;
 using GenericRepository;
@@ -7,7 +8,7 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Companies.CreateCompany;
 
-internal sealed class CreateCompanyCommandHandler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork, IMapper mapper) : IRequestHandler<CreateCompanyCommand, Result<string>>
+internal sealed class CreateCompanyCommandHandler(ICompanyRepository companyRepository, IUnitOfWork unitOfWork, IMapper mapper, ICacheService cacheService) : IRequestHandler<CreateCompanyCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(CreateCompanyCommand request, CancellationToken cancellationToken)
     {
@@ -17,8 +18,11 @@ internal sealed class CreateCompanyCommandHandler(ICompanyRepository companyRepo
             return Result<string>.Failure("Bu vergi numarası ile kayıtlı bir şirket bulunmaktadır.");
         }
         Company company = mapper.Map<Company>(request);
+
         await companyRepository.AddAsync(company);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        cacheService.Remove("companies");
         return "Şirket başarıyla oluşturuldu.";
     }
 }
