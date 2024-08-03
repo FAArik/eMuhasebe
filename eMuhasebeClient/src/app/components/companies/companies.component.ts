@@ -38,8 +38,7 @@ export class CompaniesComponent {
     });
   }
   migrateCompanyDatabases() {
-    this.http.post<CompanyModel[]>("Companies/MigrateAll",{},(res:any) => {
-      this.companies = res;
+    this.http.get<CompanyModel[]>("Companies/MigrateAll",(res:any) => {
     });
   }
 

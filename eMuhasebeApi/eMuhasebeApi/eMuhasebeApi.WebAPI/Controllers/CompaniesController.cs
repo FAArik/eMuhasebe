@@ -3,7 +3,6 @@ using eMuhasebeApi.Application.Features.Companies.DeleteCompanyById;
 using eMuhasebeApi.Application.Features.Companies.GetAllCompanies;
 using eMuhasebeApi.Application.Features.Companies.MigrateAllCompanies;
 using eMuhasebeApi.Application.Features.Companies.UpdateCompany;
-using eMuhasebeApi.Application.Features.Users.DeleteUserById;
 using eMuhasebeApi.WebAPI.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

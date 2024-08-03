@@ -1,16 +1,15 @@
 ﻿using eMuhasebeApi.Domain.Entities;
+using eMuhasebeApi.Domain.Enums;
 using eMuhasebeApi.Domain.Repositories;
-using eMuhasebeApi.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace eMuhasebeApi.Infrastructure.Context;
 
-internal sealed class CompanyDbContext : DbContext,IUnitOfWorkCompany
+internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
 {
     private string connectionString = string.Empty;
-
     public CompanyDbContext(Company company)
     {
         CreateConnectionStringWithCompany(company);
@@ -19,10 +18,19 @@ internal sealed class CompanyDbContext : DbContext,IUnitOfWorkCompany
     {
         CreateConnectionString(httpContextAccessor, context);
     }
-
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(connectionString);
+    }
+    public DbSet<CashRegister> CashRegisters { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<CashRegister>().Property(p => p.DepositAmount).HasColumnType("money");
+        modelBuilder.Entity<CashRegister>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        modelBuilder.Entity<CashRegister>().Property(p => p.BalanceAmount).HasColumnType("money");
+        modelBuilder.Entity<CashRegister>().Property(p => p.CurrencyType).HasConversion(x => x.Value, value => CurrencyTypeEnum.FromValue(value ));
+        modelBuilder.Entity<CashRegister>().HasQueryFilter(x => !x.isDeleted);
+        base.OnModelCreating(modelBuilder);
     }
     private void CreateConnectionString(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context)
     {
@@ -35,7 +43,6 @@ internal sealed class CompanyDbContext : DbContext,IUnitOfWorkCompany
 
         CreateConnectionStringWithCompany(company);
     }
-
     private void CreateConnectionStringWithCompany(Company company)
     {
         if (string.IsNullOrEmpty(company.Database.UserId))
@@ -60,7 +67,7 @@ internal sealed class CompanyDbContext : DbContext,IUnitOfWorkCompany
                 $"Password={company.Database.Password};" +
                 $"MultipleActiveResultSets=False;" +
                 $"Encrypt=True;" +
-                $"TrustServerCertificate=False;" +
+                $"TrustServerCertificate=True;" +
                 $"Connection Timeout=30;";
         }
     }
