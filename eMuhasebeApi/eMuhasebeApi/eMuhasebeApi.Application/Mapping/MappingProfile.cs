@@ -20,8 +20,8 @@ namespace eMuhasebeApi.Application.Mapping
             CreateMap<CreateCompanyCommand,Company>();
             CreateMap<UpdateCompanyCommand,Company>();
 
-            CreateMap<CreateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.TypeValue)));
-            CreateMap<UpdateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.TypeValue)));
+            CreateMap<CreateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
+            CreateMap<UpdateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
 
         }
     }

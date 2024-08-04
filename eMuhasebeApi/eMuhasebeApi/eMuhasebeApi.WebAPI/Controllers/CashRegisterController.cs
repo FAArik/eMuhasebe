@@ -35,21 +35,21 @@ namespace eMuhasebeApi.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCompany(CreateCashRegisterCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateCashRegister(CreateCashRegisterCommand command, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(command, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateCompany(UpdateCashRegisterCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateCashRegister(UpdateCashRegisterCommand command, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(command, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteCompanyById(DeleteCashRequestByIdCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteCashRegisterById(DeleteCashRequestByIdCommand command, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(command, cancellationToken);
             return StatusCode(response.StatusCode, response);

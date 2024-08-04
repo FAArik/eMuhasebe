@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using eMuhasebeApi.Domain.Enums;
+using MediatR;
 using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.CashRegisters.CreateCashRegister;
 
-public sealed record CreateCashRegisterCommand(string Name, int TypeValue) : IRequest<Result<string>>;
+public sealed record CreateCashRegisterCommand(string Name, int CurrencyTypeValue) : IRequest<Result<string>>;
 
 

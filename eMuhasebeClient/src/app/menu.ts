@@ -31,12 +31,27 @@ export const Menus: MenuModel[] = [
         isTitle: false,
         subMenus: [],
         showThisMenuJustAdmin: true
-    }
-    ,
+    },
     {
         name: "Şirketler",
         icon: "fa-solid fa-city",
         url: "/companies",
+        isTitle: false,
+        subMenus: [],
+        showThisMenuJustAdmin: true
+    },
+    {
+        name: "Kayıtlar",
+        icon: "",
+        url: "",
+        isTitle: true,
+        subMenus: [],
+        showThisMenuJustAdmin: false
+    },
+    {
+        name: "Kasalar",
+        icon: "fa-solid fa-cash-register",
+        url: "/cash-registers",
         isTitle: false,
         subMenus: [],
         showThisMenuJustAdmin: true

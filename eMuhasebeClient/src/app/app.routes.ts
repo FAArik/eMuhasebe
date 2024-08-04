@@ -7,6 +7,7 @@ import { AuthService } from './services/auth.service';
 import { UsersComponent } from './components/users/users.component';
 import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.component';
 import { CompaniesComponent } from './components/companies/companies.component';
+import { CashRegistersComponent } from './components/cash-registers/cash-registers.component';
 
 export const routes: Routes = [
     {
@@ -33,6 +34,10 @@ export const routes: Routes = [
             {
                 path: "companies",
                 component: CompaniesComponent
+            },
+            {
+                path: "cash-registers",
+                component: CashRegistersComponent
             }
         ]
     }

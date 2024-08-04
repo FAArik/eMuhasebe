@@ -8,7 +8,7 @@ using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.CashRegisters.GetAllCashRegisters;
 
-internal sealed class GetAllCashRegistersQueryHandler(ICashRegisterRepository cashRegisterRepository,ICacheService cacheService, IMapper mapper) : IRequestHandler<GetAllCashRegistersQuery, Result<List<CashRegister>>>
+internal sealed class GetAllCashRegistersQueryHandler(ICashRegisterRepository cashRegisterRepository,ICacheService cacheService) : IRequestHandler<GetAllCashRegistersQuery, Result<List<CashRegister>>>
 {
     public async Task<Result<List<CashRegister>>> Handle(GetAllCashRegistersQuery request, CancellationToken cancellationToken)
     {

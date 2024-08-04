@@ -35,7 +35,7 @@ export class AuthService {
     this.user.email = decode["Email"];
     this.user.userName = decode["UserName"];
     this.user.companyId = decode["CompanyId"];
-    this.user.isAdmin = decode["isAdmin"] == "True" ? true : false;
+    this.user.isAdmin = decode["IsAdmin"] == "True" ? true : false;
     this.user.companies = JSON.parse(decode["Companies"]);
 
     return true;

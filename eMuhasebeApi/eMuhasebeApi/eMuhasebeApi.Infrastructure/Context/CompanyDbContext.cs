@@ -23,14 +23,20 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
         optionsBuilder.UseSqlServer(connectionString);
     }
     public DbSet<CashRegister> CashRegisters { get; set; }
+    public DbSet<CashRegisterDetail> CashRegisterDetails { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CashRegister>().Property(p => p.DepositAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegister>().Property(p => p.WithdrawalAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegister>().Property(p => p.BalanceAmount).HasColumnType("money");
-        modelBuilder.Entity<CashRegister>().Property(p => p.CurrencyType).HasConversion(x => x.Value, value => CurrencyTypeEnum.FromValue(value ));
+        modelBuilder.Entity<CashRegister>().Property(p => p.CurrencyType).HasConversion(x => x.Value, value => CurrencyTypeEnum.FromValue(value));
         modelBuilder.Entity<CashRegister>().HasQueryFilter(x => !x.isDeleted);
-        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<CashRegisterDetail>().Property(p => p.DepositAmount).HasColumnType("money");
+        modelBuilder.Entity<CashRegisterDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        modelBuilder.Entity<CashRegisterDetail>().HasQueryFilter(x => !x.isDeleted);
+        modelBuilder.Entity<CashRegister>().HasMany("CashRegister").WithMany("CashRegisterDetails").;
+
     }
     private void CreateConnectionString(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context)
     {

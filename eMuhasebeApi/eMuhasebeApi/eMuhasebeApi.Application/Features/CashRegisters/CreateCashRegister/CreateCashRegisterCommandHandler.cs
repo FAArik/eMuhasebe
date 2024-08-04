@@ -13,12 +13,13 @@ internal sealed class CreateCashRegisterCommandHandler(ICashRegisterRepository c
     {
         bool isNameExists = await cashRegisterRepository.AnyAsync(x => x.Name == request.Name,cancellationToken);
 
-        if (!isNameExists)
+        if (isNameExists)
         {
             return Result<string>.Failure("Bu kasa adı daha önceden kullanılmış");
         }
         CashRegister cashRegister = mapper.Map<CashRegister>(request);
-        await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
+        await cashRegisterRepository.AddAsync(cashRegister);
+        var res =await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
         cacheService.Remove("cashRegisters");
 
