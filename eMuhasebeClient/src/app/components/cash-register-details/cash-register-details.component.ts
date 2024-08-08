@@ -1,0 +1,106 @@
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { CashRegisterModel } from '../../models/cash-register.model';
+import { HttpService } from '../../services/http.service';
+import { SwalService } from '../../services/swal.service';
+import { NgForm } from '@angular/forms';
+import { CashRegisterDetailModel } from '../../models/cash-register-detail.model';
+import { ActivatedRoute } from '@angular/router';
+import { SharedModule } from '../../modules/shared.module';
+import { CashRegisterDetailPipe } from '../../pipes/cash-register-detail.pipe';
+
+@Component({
+  selector: 'app-cash-register-details',
+  standalone: true,
+  imports: [SharedModule,CashRegisterDetailPipe],
+  templateUrl: './cash-register-details.component.html',
+  styleUrl: './cash-register-details.component.css'
+})
+export class CashRegisterDetailsComponent {
+  cashRegister: CashRegisterModel = new CashRegisterModel();
+  cashregisters: CashRegisterModel[] = [];
+  cashRegisterId: string = "";
+  search: string = "";
+  startDate: string = "";
+  endDate: string = "";
+
+  @ViewChild("createModalCloseBtn") createModalCloseBtn: ElementRef<HTMLButtonElement> | undefined;
+  @ViewChild("updateModalCloseBtn") updateModalCloseBtn: ElementRef<HTMLButtonElement> | undefined;
+
+  createModel: CashRegisterDetailModel = new CashRegisterDetailModel();
+  updateModel: CashRegisterDetailModel = new CashRegisterDetailModel();
+
+  constructor(
+    private http: HttpService,
+    private swal: SwalService,
+    private activated: ActivatedRoute
+  ) {
+
+  }
+
+  ngOnInit(): void {
+    this.activated.params.subscribe((params) => {
+      this.cashRegisterId = params["id"];
+      this.getAll();
+    });
+  }
+
+  getAll() {
+    this.http.post<CashRegisterModel>("CashRegisterDetails/GetAll", { cashRegisterId: this.cashRegisterId, startDate: this.startDate, endDate: this.endDate }, (res) => {
+      this.cashRegister = res;
+    });
+  }
+  getAllCashRegisters() {
+    this.http.post<CashRegisterModel[]>("CashRegister/GetAll", {}, (res) => {
+      this.cashregisters = res;
+    });
+  }
+
+  create(form: NgForm) {
+    return;
+    if (form.valid) {
+      this.http.post<string>("CashRegisterDetails/Create", this.createModel, (res) => {
+        this.swal.callToast(res);
+        // this.createModel = new CashRegisterModel();
+        this.createModalCloseBtn?.nativeElement.click();
+        this.getAll();
+      });
+    }
+  }
+
+  deleteById(model: CashRegisterDetailModel) {
+    this.swal.callSwal("Kasa Hareketini Sil?", `${model.date} tarihteki ${model.description} açıklamalı hareketi silmek istiyor musunuz?`, () => {
+      this.http.post<string>("CashRegisterDetails/DeleteById", { id: model.id }, (res) => {
+        this.getAll();
+        this.swal.callToast(res, "info");
+      });
+    })
+  }
+
+  get(model: CashRegisterDetailModel) {
+    this.updateModel = { ...model };
+  }
+
+  update(form: NgForm) {
+    return;
+    if (form.valid) {
+      this.http.post<string>("CashRegisterDetails/Update", this.updateModel, (res) => {
+        this.swal.callToast(res, "info");
+        this.updateModalCloseBtn?.nativeElement.click();
+        this.getAll();
+      });
+    }
+  }
+
+  changeCurrencyNameToSymbol(name: string) {
+    switch (name) {
+      case "TL":
+        return "₺";
+      case "USD":
+        return "$";
+      case "EUR":
+        return "€";
+      default:
+        return "";
+    }
+  }
+}

@@ -10,4 +10,5 @@ public sealed class CashRegisterDetail:Entity
     public decimal DepositAmount { get; set; }
     public decimal WithdrawalAmount { get; set; }
     public Guid? CashRegisterDetailId { get; set; }
+    public CashRegisterDetail? CashRegisterDetailOpposite { get; set; }
 }
