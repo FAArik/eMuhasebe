@@ -10,6 +10,7 @@ public sealed record UpdateCashRegisterDetailCommand(
     Guid Id,
     Guid CashRegisterId,
     int Type,
+    DateOnly Date,
     decimal Amount,
     string Description
     ) : IRequest<Result<string>>;
@@ -30,7 +31,7 @@ internal sealed class UpdateCashRegisterDetailCommandHandler(
         {
             return Result<string>.Failure("Kasa hareketi bulunamadı");
         }
-        CashRegister cashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(x => x.Id == cashRegisterDetail.Id, cancellationToken);
+        CashRegister cashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(x => x.Id == cashRegisterDetail.CashRegisterId, cancellationToken);
 
         if (cashRegister is null)
         {
@@ -46,6 +47,7 @@ internal sealed class UpdateCashRegisterDetailCommandHandler(
         cashRegisterDetail.WithdrawalAmount = request.Type == 1 ? request.Amount : 0;
 
         cashRegisterDetail.Description = request.Description;
+        cashRegisterDetail.Date = request.Date;
 
         await unitOfWorkCompany.SaveChangesAsync();
 

@@ -6,7 +6,6 @@ export class CashRegisterModel{
     name:string="";
     depositAmount:number=0;
     withdrawalAmount:number=0;
-    balanceAmount:number=0;
     currencyType:CurrencyTypeModel=new CurrencyTypeModel();
     currencyTypeValue:number=1;
     details:CashRegisterDetailModel[]=[];

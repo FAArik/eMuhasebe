@@ -1,16 +1,7 @@
-﻿using eMuhasebeApi.Application.Features.Auth.ChangeCompany;
-using eMuhasebeApi.Application.Features.Auth.ConfirmEmail;
-using eMuhasebeApi.Application.Features.Auth.Login;
-using eMuhasebeApi.Application.Features.Auth.SendConfirmEmail;
-using eMuhasebeApi.Application.Features.CashRegisters.CreateCashRegister;
+﻿using eMuhasebeApi.Application.Features.CashRegisters.CreateCashRegister;
 using eMuhasebeApi.Application.Features.CashRegisters.DeleteCashRegisterById;
 using eMuhasebeApi.Application.Features.CashRegisters.GetAllCashRegisters;
 using eMuhasebeApi.Application.Features.CashRegisters.UpdateCashRegister;
-using eMuhasebeApi.Application.Features.Companies.CreateCompany;
-using eMuhasebeApi.Application.Features.Companies.DeleteCompanyById;
-using eMuhasebeApi.Application.Features.Companies.GetAllCompanies;
-using eMuhasebeApi.Application.Features.Companies.MigrateAllCompanies;
-using eMuhasebeApi.Application.Features.Companies.UpdateCompany;
 using eMuhasebeApi.WebAPI.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,8 +15,6 @@ namespace eMuhasebeApi.WebAPI.Controllers
         public CashRegisterController(IMediator mediator) : base(mediator)
         {
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> GetAll(GetAllCashRegistersQuery query, CancellationToken cancellationToken)

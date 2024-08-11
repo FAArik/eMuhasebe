@@ -14,34 +14,35 @@ internal sealed class CreateCashRegisterDetailCommandHandler(
 {
     public async Task<Result<string>> Handle(CreateCashRegisterDetailCommand request, CancellationToken cancellationToken)
     {
-        CashRegister cashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(x => x.Id == request.CashRegisterId,cancellationToken);
-        cashRegister.DepositAmount += (request.Type==0?request.Amount:0);
-        cashRegister.WithdrawalAmount += (request.Type==1?request.Amount:0);
+        CashRegister cashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(p => p.Id == request.CashRegisterId, cancellationToken);
+
+        cashRegister.DepositAmount += (request.Type == 0 ? request.Amount : 0);
+        cashRegister.WithdrawalAmount += (request.Type == 1 ? request.Amount : 0);
+
         CashRegisterDetail cashRegisterDetail = new()
         {
             Date = request.Date,
             DepositAmount = request.Type == 0 ? request.Amount : 0,
             WithdrawalAmount = request.Type == 1 ? request.Amount : 0,
-            CashRegisterDetailId = request.CashRegisterDetailId,
             Description = request.Description,
-            CashRegisterId = request.CashRegisterId,
+            CashRegisterId = request.CashRegisterId
         };
-        await cashRegisterDetailRepository.AddAsync(cashRegisterDetail,cancellationToken);
-        if(request.CashRegisterDetailId is not null)
+        await cashRegisterDetailRepository.AddAsync(cashRegisterDetail, cancellationToken);
+        if (request.OppositeCashRegisterId is not null)
         {
-            CashRegister oppositeCashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(x => x.Id == request.CashRegisterDetailId, cancellationToken);
-            cashRegister.DepositAmount += (request.Type == 1 ? request.OppositeAmount : 0);
-            cashRegister.WithdrawalAmount += (request.Type == 0 ? request.OppositeAmount : 0);
-
+            CashRegister oppositeCashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(p => p.Id == request.OppositeCashRegisterId, cancellationToken);
+            oppositeCashRegister.DepositAmount += (request.Type == 1 ? request.OppositeAmount : 0);
+            oppositeCashRegister.WithdrawalAmount += (request.Type == 0 ? request.OppositeAmount : 0);
             CashRegisterDetail oppositeCashRegisterDetail = new()
             {
                 Date = request.Date,
-                DepositAmount = request.Type == 0 ? request.OppositeAmount : 0,
-                WithdrawalAmount = request.Type == 1 ? request.OppositeAmount : 0,
+                DepositAmount = request.Type == 1 ? request.OppositeAmount : 0,
+                WithdrawalAmount = request.Type == 0 ? request.OppositeAmount : 0,
                 CashRegisterDetailId = cashRegisterDetail.Id,
                 Description = request.Description,
-                CashRegisterId = (Guid)request.CashRegisterDetailId,
+                CashRegisterId = (Guid)request.OppositeCashRegisterId
             };
+            cashRegisterDetail.CashRegisterDetailId = oppositeCashRegisterDetail.Id;
             await cashRegisterDetailRepository.AddAsync(oppositeCashRegisterDetail, cancellationToken);
         }
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);

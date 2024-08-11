@@ -7,13 +7,15 @@ import { CashRegisterDetailModel } from '../../models/cash-register-detail.model
 import { ActivatedRoute } from '@angular/router';
 import { SharedModule } from '../../modules/shared.module';
 import { CashRegisterDetailPipe } from '../../pipes/cash-register-detail.pipe';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-cash-register-details',
   standalone: true,
-  imports: [SharedModule,CashRegisterDetailPipe],
+  imports: [SharedModule, CashRegisterDetailPipe],
   templateUrl: './cash-register-details.component.html',
-  styleUrl: './cash-register-details.component.css'
+  styleUrl: './cash-register-details.component.css',
+  providers: [DatePipe]
 })
 export class CashRegisterDetailsComponent {
   cashRegister: CashRegisterModel = new CashRegisterModel();
@@ -32,15 +34,17 @@ export class CashRegisterDetailsComponent {
   constructor(
     private http: HttpService,
     private swal: SwalService,
-    private activated: ActivatedRoute
+    private activated: ActivatedRoute,
+    private date: DatePipe
   ) {
-
-  }
-
-  ngOnInit(): void {
     this.activated.params.subscribe((params) => {
       this.cashRegisterId = params["id"];
+      this.startDate = this.date.transform(new Date(), "yyyy-MM-dd") ?? "";
+      this.endDate = this.date.transform(new Date(), "yyyy-MM-dd") ?? "";
+      this.createModel.date = this.date.transform(new Date(), "yyyy-MM-dd") ?? "";
+      this.createModel.cashRegisterId = this.cashRegisterId;
       this.getAll();
+      this.getAllCashRegisters();
     });
   }
 
@@ -51,17 +55,28 @@ export class CashRegisterDetailsComponent {
   }
   getAllCashRegisters() {
     this.http.post<CashRegisterModel[]>("CashRegister/GetAll", {}, (res) => {
-      this.cashregisters = res;
+      this.cashregisters = res.filter(x => x.id != this.cashRegisterId);
     });
   }
 
   create(form: NgForm) {
-    return;
     if (form.valid) {
+      this.createModel.amount = +this.createModel.amount;
+      this.createModel.oppositeAmount = +this.createModel.oppositeAmount;
+      if (this.createModel.recordType === 0) {
+        this.createModel.oppositeCashRegisterId = null;
+      }
       this.http.post<string>("CashRegisterDetails/Create", this.createModel, (res) => {
         this.swal.callToast(res);
-        // this.createModel = new CashRegisterModel();
         this.createModalCloseBtn?.nativeElement.click();
+        form.resetForm(
+          {
+            date: this.date.transform(new Date(), "yyyy-MM-dd") ?? "",
+            cashRegisterId: this.cashRegisterId,
+            type: 0,
+            recordType: 0,
+          }
+        );
         this.getAll();
       });
     }
@@ -78,14 +93,16 @@ export class CashRegisterDetailsComponent {
 
   get(model: CashRegisterDetailModel) {
     this.updateModel = { ...model };
+    this.updateModel.amount = this.updateModel.depositAmount + this.updateModel.withdrawalAmount;
+    this.updateModel.type = this.updateModel.depositAmount > 0 ? 0 : 1;
   }
 
   update(form: NgForm) {
-    return;
     if (form.valid) {
       this.http.post<string>("CashRegisterDetails/Update", this.updateModel, (res) => {
         this.swal.callToast(res, "info");
         this.updateModalCloseBtn?.nativeElement.click();
+        form.resetForm();
         this.getAll();
       });
     }
@@ -101,6 +118,12 @@ export class CashRegisterDetailsComponent {
         return "€";
       default:
         return "";
+    }
+  }
+  setOppositeCashRegister() {
+    const cash = this.cashregisters.find(x => x.id == this.createModel.oppositeCashRegisterId);
+    if (cash) {
+      this.createModel.oppositeCashRegister = cash;
     }
   }
 }

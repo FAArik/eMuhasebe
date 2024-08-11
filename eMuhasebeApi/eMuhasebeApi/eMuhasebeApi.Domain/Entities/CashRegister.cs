@@ -9,7 +9,6 @@ public sealed class CashRegister : Entity
     public CurrencyTypeEnum CurrencyType { get; set; } = CurrencyTypeEnum.TL;
     public decimal DepositAmount { get; set; }
     public decimal WithdrawalAmount { get; set; }
-    public decimal BalanceAmount { get; set; }
     public  List<CashRegisterDetail>? Details { get; set; }
 }
     

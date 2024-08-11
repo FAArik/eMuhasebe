@@ -28,7 +28,6 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
     {
         modelBuilder.Entity<CashRegister>().Property(p => p.DepositAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegister>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-        modelBuilder.Entity<CashRegister>().Property(p => p.BalanceAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegister>().Property(p => p.CurrencyType).HasConversion(x => x.Value, value => CurrencyTypeEnum.FromValue(value));
         modelBuilder.Entity<CashRegister>().HasQueryFilter(x => !x.isDeleted);
         modelBuilder.Entity<CashRegister>().HasMany(x => x.Details).WithOne().HasForeignKey(x => x.CashRegisterId);

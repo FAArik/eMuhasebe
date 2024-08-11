@@ -20,6 +20,7 @@ export class HttpService {
 
   post<T>(apiUrl:string, body:any, callBack:(res:T)=> void,errorCallBack?:()=> void ){
     this.spinner.show();
+    console.log(body);
     this.http.post<ResultModel<T>>(`${api}/${apiUrl}`,body,{
       headers: {
         "Authorization": "Bearer " + this.auth.token

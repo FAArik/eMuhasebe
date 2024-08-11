@@ -55,14 +55,27 @@
                     : changeCurrencyNameToSymbol(data.currencyType.name)
               }}
             </td>
-            <td>
+            <td
+              [ngClass]="
+                data.depositAmount - data.withdrawalAmount > 0
+                  ? 'text-success'
+                  : 'text-danger'
+              "
+            >
               {{
-                data.balanceAmount
+                data.depositAmount - data.withdrawalAmount
                   | trCurrency
                     : changeCurrencyNameToSymbol(data.currencyType.name)
               }}
             </td>
             <td>
+              <button
+                class="btn btn-dark btn-sm me-1"
+                routerLink="/cash-registers/details/{{ data.id }}"
+              >
+                <i class="fa-regular fa-solid fa-file-lines me-1"></i>
+                Detaylar
+              </button>
               <button
                 data-toggle="modal"
                 data-target="#updateModal"
@@ -91,7 +104,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">Kasa Ekleme Formu</h1>
+        <h3 class="modal-title fs-5">Kasa Ekleme Formu</h3>
         <button
           type="button"
           #createModalCloseBtn
@@ -152,7 +165,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">Example Güncelleme Formu</h1>
+        <h3 class="modal-title fs-5">Kasa Güncelleme Formu</h3>
         <button
           type="button"
           #updateModalCloseBtn
@@ -168,38 +181,38 @@
         autocomplete="off"
         (ngSubmit)="update(updateForm)"
       >
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Kasa Adı</label>
-          <input
-            type="text"
-            required
-            minlength="3"
-            [(ngModel)]="updateModel.name"
-            class="form-control"
-            name="updatename"
-          />
-          <div class="invalid-feedback"></div>
-        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Kasa Adı</label>
+            <input
+              type="text"
+              required
+              minlength="3"
+              [(ngModel)]="updateModel.name"
+              class="form-control"
+              name="updatename"
+            />
+            <div class="invalid-feedback"></div>
+          </div>
 
-        <div class="form-group mt-2">
-          <label>Döviz Tipi</label>
-          <select
-            [(ngModel)]="updateModel.currencyTypeValue"
-            required
-            class="form-control"
-            name="updateCurrencyType"
-          >
-            @for (item of currencyTypes; track item) {
-            <option [value]="item.value">
-              {{ item.name }}
-            </option>
-            }
-          </select>
+          <div class="form-group mt-2">
+            <label>Döviz Tipi</label>
+            <select
+              [(ngModel)]="updateModel.currencyTypeValue"
+              required
+              class="form-control"
+              name="updateCurrencyType"
+            >
+              @for (item of currencyTypes; track item) {
+              <option [value]="item.value">
+                {{ item.name }}
+              </option>
+              }
+            </select>
 
-          <div class="invalid-feedback"></div>
+            <div class="invalid-feedback"></div>
+          </div>
         </div>
-      </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary w-100">Güncelle</button>
         </div>

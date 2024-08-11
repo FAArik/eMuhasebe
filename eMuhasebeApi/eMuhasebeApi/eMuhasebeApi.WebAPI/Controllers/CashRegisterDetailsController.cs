@@ -1,7 +1,7 @@
-﻿using eMuhasebeApi.Application.Features.CashRegisterDetails.DeleteCashRegisterDetailById;
+﻿using eMuhasebeApi.Application.Features.CashRegisterDetails.CreateCashRegisterDetail;
+using eMuhasebeApi.Application.Features.CashRegisterDetails.DeleteCashRegisterDetailById;
 using eMuhasebeApi.Application.Features.CashRegisterDetails.GetAllCashRegisterDetailsQuery;
 using eMuhasebeApi.Application.Features.CashRegisterDetails.UpdateCashRegisterDetail;
-using eMuhasebeApi.Application.Features.CashRegisters.CreateCashRegister;
 using eMuhasebeApi.WebAPI.Abstractions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +24,7 @@ namespace eMuhasebeApi.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateCashRegisterCommand command, CancellationToken cancellationToken)
+        public async Task<IActionResult> Create(CreateCashRegisterDetailCommand command, CancellationToken cancellationToken)
         {
             var response = await _mediator.Send(command, cancellationToken);
             return StatusCode(response.StatusCode, response);

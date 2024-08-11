@@ -58,6 +58,4 @@ app.UseExceptionHandler();
 
 app.MapControllers();
 
-ExtensionsMiddleware.CreateFirstUser(app);
-
 app.Run();

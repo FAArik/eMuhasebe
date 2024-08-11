@@ -11,8 +11,9 @@ internal sealed class GetAllCashRegisterDetailsQueryHandler(ICashRegisterReposit
     public async Task<Result<CashRegister>> Handle(GetAllCashRegisterDetailsQuery request, CancellationToken cancellationToken)
     {
         CashRegister? cashRegister = await cashRegisterRepository
-            .Where(x => x.Id == request.CashregiserId)
-            .Include(x => x.Details!.Where(x => x.Date >= request.StartDate && x.Date <= request.EndDate)).FirstOrDefaultAsync(cancellationToken);
+            .Where(x => x.Id == request.CashRegisterId)
+            .Include(x => x.Details!.Where(x => x.Date >= request.StartDate && x.Date <= request.EndDate))
+            .FirstOrDefaultAsync(cancellationToken);
 
 
         if (cashRegister is null)
