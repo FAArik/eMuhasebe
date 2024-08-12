@@ -24,17 +24,30 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
     }
     public DbSet<CashRegister> CashRegisters { get; set; }
     public DbSet<CashRegisterDetail> CashRegisterDetails { get; set; }
+    public DbSet<Bank> Banks { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        #region cashRegister
         modelBuilder.Entity<CashRegister>().Property(p => p.DepositAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegister>().Property(p => p.WithdrawalAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegister>().Property(p => p.CurrencyType).HasConversion(x => x.Value, value => CurrencyTypeEnum.FromValue(value));
         modelBuilder.Entity<CashRegister>().HasQueryFilter(x => !x.isDeleted);
         modelBuilder.Entity<CashRegister>().HasMany(x => x.Details).WithOne().HasForeignKey(x => x.CashRegisterId);
+        #endregion
 
+        #region cashRegisterDetail
         modelBuilder.Entity<CashRegisterDetail>().Property(p => p.DepositAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegisterDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegisterDetail>().HasQueryFilter(x => !x.isDeleted);
+        #endregion
+
+        #region Bank
+        modelBuilder.Entity<Bank>().Property(p => p.DepositAmount).HasColumnType("money");
+        modelBuilder.Entity<Bank>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        modelBuilder.Entity<Bank>().Property(p => p.CurrencyType).HasConversion(x => x.Value, value => CurrencyTypeEnum.FromValue(value));
+        modelBuilder.Entity<Bank>().HasQueryFilter(x => !x.isDeleted);
+
+        #endregion
 
     }
     private void CreateConnectionString(IHttpContextAccessor httpContextAccessor, ApplicationDbContext context)
