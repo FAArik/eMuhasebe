@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using eMuhasebeApi.Application.Features.Banks.CreateBank;
+using eMuhasebeApi.Application.Features.Banks.UpdateBank;
 using eMuhasebeApi.Application.Features.CashRegisters.CreateCashRegister;
 using eMuhasebeApi.Application.Features.CashRegisters.UpdateCashRegister;
 using eMuhasebeApi.Application.Features.Companies.CreateCompany;
@@ -22,6 +24,10 @@ namespace eMuhasebeApi.Application.Mapping
 
             CreateMap<CreateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
             CreateMap<UpdateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
+
+
+            CreateMap<CreateBankCommand, Bank>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
+            CreateMap<UpdateBankCommand, Bank>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
 
         }
     }

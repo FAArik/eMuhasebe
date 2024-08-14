@@ -9,6 +9,7 @@ import { ConfirmEmailComponent } from './components/confirm-email/confirm-email.
 import { CompaniesComponent } from './components/companies/companies.component';
 import { CashRegistersComponent } from './components/cash-registers/cash-registers.component';
 import { CashRegisterDetailsComponent } from './components/cash-register-details/cash-register-details.component';
+import { BanksComponent } from './components/banks/banks.component';
 
 export const routes: Routes = [
     {
@@ -43,6 +44,20 @@ export const routes: Routes = [
                         path: "",
                         pathMatch: "full",
                         component: CashRegistersComponent
+                    },
+                    {
+                        path:"details/:id",
+                        component:CashRegisterDetailsComponent
+                    }
+                ]
+            },
+            {
+                path: "banks",
+                children: [
+                    {
+                        path: "",
+                        pathMatch: "full",
+                        component: BanksComponent
                     },
                     {
                         path:"details/:id",
