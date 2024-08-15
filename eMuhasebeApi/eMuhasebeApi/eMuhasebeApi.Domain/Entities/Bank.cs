@@ -10,4 +10,5 @@ public sealed class Bank:Entity
     public CurrencyTypeEnum CurrencyType { get; set; } = CurrencyTypeEnum.TL;
     public decimal DepositAmount { get; set; }
     public decimal WithdrawalAmount { get; set; }
+    public List<BankDetail>? Details { get; set; }
 }

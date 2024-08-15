@@ -25,6 +25,7 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
     public DbSet<CashRegister> CashRegisters { get; set; }
     public DbSet<CashRegisterDetail> CashRegisterDetails { get; set; }
     public DbSet<Bank> Banks { get; set; }
+    public DbSet<BankDetail> BankDetails { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         #region cashRegister
@@ -46,7 +47,13 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
         modelBuilder.Entity<Bank>().Property(p => p.WithdrawalAmount).HasColumnType("money");
         modelBuilder.Entity<Bank>().Property(p => p.CurrencyType).HasConversion(x => x.Value, value => CurrencyTypeEnum.FromValue(value));
         modelBuilder.Entity<Bank>().HasQueryFilter(x => !x.isDeleted);
+        modelBuilder.Entity<Bank>().HasMany(x => x.Details).WithOne().HasForeignKey(x => x.BankId);
+        #endregion
 
+        #region BankDetails
+        modelBuilder.Entity<BankDetail>().Property(p => p.DepositAmount).HasColumnType("money");
+        modelBuilder.Entity<BankDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        modelBuilder.Entity<BankDetail>().HasQueryFilter(x => !x.isDeleted);
         #endregion
 
     }

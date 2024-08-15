@@ -129,7 +129,7 @@
               type="text"
               required
               minlength="3"
-              [(ngModel)]="createModel.name"
+              [(ngModel)]="createModel.name"w
               class="form-control"
               name="name"
             />
@@ -197,52 +197,52 @@
         autocomplete="off"
         (ngSubmit)="update(updateForm)"
       >
-        <div class="modal-body">
-          <div class="form-group">
-            <label>Kasa Adı</label>
-            <input
-              type="text"
-              required
-              minlength="3"
-              [(ngModel)]="updateModel.name"
-              class="form-control"
-              name="updatename"
-            />
-            <div class="invalid-feedback"></div>
-          </div>
-
-          <div class="form-group mt-2">
-            <label>IBAN</label>
-            <input
-              type="text"
-              required
-              minlength="26"
-              maxlength="26"
-              [(ngModel)]="updateModel.iban"
-              class="form-control"
-              name="updateiban"
-            />
-            <div class="invalid-feedback"></div>
-          </div>
-
-          <div class="form-group mt-2">
-            <label>Döviz Tipi</label>
-            <select
-              [(ngModel)]="updateModel.currencyTypeValue"
-              required
-              class="form-control"
-              name="updateCurrencyType"
-            >
-              @for (item of currencyTypes; track item) {
-              <option [value]="item.value">
-                {{ item.name }}
-              </option>
-              }
-            </select>
-
-            <div class="invalid-feedback"></div>
-          </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Banka Adı</label>
+          <input
+            type="text"
+            required
+            minlength="3"
+            [(ngModel)]="updateModel.name"
+            class="form-control"
+            name="updateName"
+          />
+          <div class="invalid-feedback"></div>
         </div>
+
+        <div class="form-group mt-2">
+          <label>IBAN</label>
+          <input
+            type="text"
+            required
+            minlength="26"
+            maxlength="26"
+            [(ngModel)]="updateModel.iban"
+            class="form-control"
+            name="updateIban"
+          />
+          <div class="invalid-feedback"></div>
+        </div>
+
+        <div class="form-group mt-2">
+          <label>Döviz Tipi</label>
+          <select
+            [(ngModel)]="updateModel.currencyTypeValue"
+            required
+            class="form-control"
+            name="updateCurrencyType"
+          >
+            @for (item of currencyTypes; track item) {
+            <option [value]="item.value">
+              {{ item.name }}
+            </option>
+            }
+          </select>
+
+          <div class="invalid-feedback"></div>
+        </div>
+      </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary w-100">Güncelle</button>
         </div>

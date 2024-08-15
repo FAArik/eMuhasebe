@@ -43,7 +43,7 @@ export class BanksComponent {
 
   create(form: NgForm) {
     if (form.valid) {
-      this.http.post<string>("Banks/CreateBanks", this.createModel, (res) => {
+      this.http.post<string>("Banks/Create", this.createModel, (res) => {
         this.swal.callToast(res);
         this.createModel = new BankModel();
         this.createModalCloseBtn?.nativeElement.click();
@@ -54,7 +54,7 @@ export class BanksComponent {
 
   deleteById(model: BankModel) {
     this.swal.callSwal("Bankayı Sil?", `${model.name} bankasını silmek istiyor musunuz?`, () => {
-      this.http.post<string>("Banks/DeleteBanksById", { id: model.id }, (res) => {
+      this.http.post<string>("Banks/DeleteById", { id: model.id }, (res) => {
         this.getAll();
         this.swal.callToast(res, "info");
       });
@@ -68,7 +68,7 @@ export class BanksComponent {
 
   update(form: NgForm) {
     if (form.valid) {
-      this.http.post<string>("Banks/UpdateBanks", this.updateModel, (res) => {
+      this.http.post<string>("Banks/Update", this.updateModel, (res) => {
         this.swal.callToast(res, "info");
         this.updateModalCloseBtn?.nativeElement.click();
         this.getAll();
