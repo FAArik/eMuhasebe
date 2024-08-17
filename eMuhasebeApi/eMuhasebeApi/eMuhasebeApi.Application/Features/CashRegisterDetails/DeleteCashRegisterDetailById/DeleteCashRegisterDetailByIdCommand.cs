@@ -1,6 +1,4 @@
-﻿using eMuhasebeApi.Application.Features.CashRegisterDetails.DeleteCashRegisterDetailById;
-using MediatR;
-using System.Xml.Linq;
+﻿using MediatR;
 using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.CashRegisterDetails.DeleteCashRegisterDetailById;
