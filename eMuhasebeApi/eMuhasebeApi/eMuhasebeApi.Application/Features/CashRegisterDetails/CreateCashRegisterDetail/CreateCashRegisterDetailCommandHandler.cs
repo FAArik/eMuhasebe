@@ -7,6 +7,8 @@ using TS.Result;
 namespace eMuhasebeApi.Application.Features.CashRegisterDetails.CreateCashRegisterDetail;
 
 internal sealed class CreateCashRegisterDetailCommandHandler(
+    IBankRepository bankRepository,
+    IBankDetailRepository bankDetailRepository,
     ICashRegisterRepository cashRegisterRepository,
     ICashRegisterDetailRepository cashRegisterDetailRepository,
     IUnitOfWorkCompany unitOfWorkCompany,
@@ -28,6 +30,8 @@ internal sealed class CreateCashRegisterDetailCommandHandler(
             CashRegisterId = request.CashRegisterId
         };
         await cashRegisterDetailRepository.AddAsync(cashRegisterDetail, cancellationToken);
+        
+        
         if (request.OppositeCashRegisterId is not null)
         {
             CashRegister oppositeCashRegister = await cashRegisterRepository.GetByExpressionWithTrackingAsync(p => p.Id == request.OppositeCashRegisterId, cancellationToken);
@@ -38,15 +42,36 @@ internal sealed class CreateCashRegisterDetailCommandHandler(
                 Date = request.Date,
                 DepositAmount = request.Type == 1 ? request.OppositeAmount : 0,
                 WithdrawalAmount = request.Type == 0 ? request.OppositeAmount : 0,
-                CashRegisterDetailOppositeId = cashRegisterDetail.Id,
+                CashRegisterDetailId = cashRegisterDetail.Id,
                 Description = request.Description,
                 CashRegisterId = (Guid)request.OppositeCashRegisterId
             };
-            cashRegisterDetail.CashRegisterDetailOppositeId = oppositeCashRegisterDetail.Id;
+            cashRegisterDetail.CashRegisterDetailId = oppositeCashRegisterDetail.Id;
             await cashRegisterDetailRepository.AddAsync(oppositeCashRegisterDetail, cancellationToken);
         }
+
+        if (request.OppositeBankId is not null)
+        {
+            Bank oppositeBank = await bankRepository.GetByExpressionWithTrackingAsync(p => p.Id == request.OppositeBankId, cancellationToken);
+            oppositeBank.DepositAmount += (request.Type == 1 ? request.OppositeAmount : 0);
+            oppositeBank.WithdrawalAmount += (request.Type == 0 ? request.OppositeAmount : 0);
+            BankDetail oppositeBankDetail = new()
+            {
+                Date = request.Date,
+                DepositAmount = request.Type == 1 ? request.OppositeAmount : 0,
+                WithdrawalAmount = request.Type == 0 ? request.OppositeAmount : 0,
+                CashRegisterDetailId = cashRegisterDetail.Id,
+                Description = request.Description,
+                BankId = (Guid)request.OppositeBankId
+            };
+            cashRegisterDetail.BankDetailId = oppositeBankDetail.Id;
+            await bankDetailRepository.AddAsync(oppositeBankDetail, cancellationToken);
+        }
+
+
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
+        cacheService.Remove("banks");
         cacheService.Remove("cashRegisters");
 
         return "Kasa hareketi başarıyla işlendi";

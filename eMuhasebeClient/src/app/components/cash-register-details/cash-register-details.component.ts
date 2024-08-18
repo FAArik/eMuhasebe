@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { SharedModule } from '../../modules/shared.module';
 import { CashRegisterDetailPipe } from '../../pipes/cash-register-detail.pipe';
 import { DatePipe } from '@angular/common';
+import { BankModel } from '../../models/bank.model';
 
 @Component({
   selector: 'app-cash-register-details',
@@ -20,6 +21,7 @@ import { DatePipe } from '@angular/common';
 export class CashRegisterDetailsComponent {
   cashRegister: CashRegisterModel = new CashRegisterModel();
   cashregisters: CashRegisterModel[] = [];
+  banks: BankModel[] = [];
   cashRegisterId: string = "";
   search: string = "";
   startDate: string = "";
@@ -45,6 +47,7 @@ export class CashRegisterDetailsComponent {
       this.createModel.cashRegisterId = this.cashRegisterId;
       this.getAll();
       this.getAllCashRegisters();
+      this.getAllBanks();
     });
   }
 
@@ -58,13 +61,23 @@ export class CashRegisterDetailsComponent {
       this.cashregisters = res.filter(x => x.id != this.cashRegisterId);
     });
   }
+  getAllBanks() {
+    this.http.post<BankModel[]>("Banks/GetAll", {}, (res) => {
+      this.banks = res;
+    });
+  }
 
   create(form: NgForm) {
     if (form.valid) {
       this.createModel.amount = +this.createModel.amount;
       this.createModel.oppositeAmount = +this.createModel.oppositeAmount;
       
-      if (this.createModel.recordType === 0) {
+      if (this.createModel.recordType == 0) {
+        this.createModel.oppositeBankId = null;
+        this.createModel.oppositeCashRegisterId = null;
+      } else if (this.createModel.recordType == 1) {
+        this.createModel.oppositeBankId = null;
+      }else if (this.createModel.recordType == 2) {
         this.createModel.oppositeCashRegisterId = null;
       }
 
@@ -128,6 +141,13 @@ export class CashRegisterDetailsComponent {
     const cash = this.cashregisters.find(x => x.id == this.createModel.oppositeCashRegisterId);
     if (cash) {
       this.createModel.oppositeCashRegister = cash;
+    }
+  }
+  
+  setOppositeBank() {
+    const bank = this.banks.find(x => x.id == this.createModel.oppositeBankId);
+    if (bank) {
+      this.createModel.oppositeBank = bank;
     }
   }
 }

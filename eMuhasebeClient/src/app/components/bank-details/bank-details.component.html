@@ -61,7 +61,7 @@
               <span class="me-1">
                 {{ data.description }}
               </span>
-              @if(data.bankDetailOppositeId){
+              @if(data.bankDetailId || data.cashRegisterDetailId){
               <i class="fa-solid fa-right-left"></i>
               }
             </td>
@@ -173,6 +173,7 @@
             >
               <option [value]="0">Diğer</option>
               <option [value]="1">Banka</option>
+              <option [value]="2">Kasa</option>
             </select>
 
             <div class="invalid-feedback"></div>
@@ -196,6 +197,7 @@
 
             <div class="invalid-feedback"></div>
           </div>
+          
 
           @if(createModel.oppositeBank.currencyType.value !=
           bank.currencyType.value){
@@ -211,6 +213,42 @@
             <div class="invalid-feedback"></div>
           </div>
           } }
+
+          @if (createModel.recordType == 2) {
+            <div class="form-group mt-2">
+              <label>Kasa</label>
+              <select
+                (change)="setOppositeCash()"
+                class="form-control"
+                name="bankDetailId"
+                [(ngModel)]="createModel.oppositeCashRegisterId!"
+              >
+                @for (cash of cashRegisters; track cash) {
+                <option [value]="cash.id">
+                  {{ cash.name }}
+                </option>
+                }
+              </select>
+  
+              <div class="invalid-feedback"></div>
+            </div>
+            
+  
+            @if(createModel.oppositeBank.currencyType.value !=
+            bank.currencyType.value){
+            <div class="form-group mt-2">
+              <label>Karşı Tutar</label>
+              <input
+                type="text"
+                required
+                [(ngModel)]="createModel.oppositeAmount"
+                class="form-control"
+                name="oppositeamount"
+              />
+              <div class="invalid-feedback"></div>
+            </div>
+            } }
+          
           <div class="form-group mt-2">
             <label>Açıklama</label>
             <input

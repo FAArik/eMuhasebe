@@ -61,7 +61,7 @@
               <span class="me-1">
                 {{ data.description }}
               </span>
-              @if(data.cashRegisterDetailOppositeId){
+              @if(data.cashRegisterDetailId || data.bankDetailId){
 
               <i class="fa-solid fa-right-left"></i>
               }
@@ -174,6 +174,7 @@
             >
               <option [value]="0">Diğer</option>
               <option [value]="1">Kasa</option>
+              <option [value]="2">Banka</option>
             </select>
 
             <div class="invalid-feedback"></div>
@@ -212,6 +213,41 @@
             <div class="invalid-feedback"></div>
           </div>
           } }
+
+          @if (createModel.recordType == 2) {
+            <div class="form-group mt-2">
+              <label>Kasa</label>
+              <select
+                (change)="setOppositeBank()"
+                class="form-control"
+                name="cashRegisterDetailId"
+                [(ngModel)]="createModel.oppositeBankId!"
+              >
+                @for (bank of banks; track bank) {
+                <option [value]="bank.id">
+                  {{ bank.name }}
+                </option>
+                }
+              </select>
+  
+              <div class="invalid-feedback"></div>
+            </div>
+  
+            @if(createModel.oppositeCashRegister.currencyType.value !=
+            cashRegister.currencyType.value){
+            <div class="form-group mt-2">
+              <label>Karşı Tutar</label>
+              <input
+                type="text"
+                required
+                [(ngModel)]="createModel.oppositeAmount"
+                class="form-control"
+                name="oppositeamount"
+              />
+              <div class="invalid-feedback"></div>
+            </div>
+            } }
+
           <div class="form-group mt-2">
             <label>Açıklama</label>
             <input
