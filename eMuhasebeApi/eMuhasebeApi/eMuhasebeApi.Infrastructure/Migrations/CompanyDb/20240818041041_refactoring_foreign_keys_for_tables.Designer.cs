@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eMuhasebeApi.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using eMuhasebeApi.Infrastructure.Context;
 namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    partial class CompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240818041041_refactoring_foreign_keys_for_tables")]
+    partial class refactoring_foreign_keys_for_tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,6 +86,8 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BankDetailOppositeId");
+
                     b.HasIndex("BankId");
 
                     b.ToTable("BankDetails");
@@ -145,6 +150,8 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CashRegisterDetailOppositeId");
+
                     b.HasIndex("CashRegisterId");
 
                     b.ToTable("CashRegisterDetails");
@@ -152,20 +159,32 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.BankDetail", b =>
                 {
+                    b.HasOne("eMuhasebeApi.Domain.Entities.BankDetail", "BankDetailOpposite")
+                        .WithMany()
+                        .HasForeignKey("BankDetailOppositeId");
+
                     b.HasOne("eMuhasebeApi.Domain.Entities.Bank", null)
                         .WithMany("Details")
                         .HasForeignKey("BankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BankDetailOpposite");
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.CashRegisterDetail", b =>
                 {
+                    b.HasOne("eMuhasebeApi.Domain.Entities.CashRegisterDetail", "CashRegisterDetailOpposite")
+                        .WithMany()
+                        .HasForeignKey("CashRegisterDetailOppositeId");
+
                     b.HasOne("eMuhasebeApi.Domain.Entities.CashRegister", null)
                         .WithMany("Details")
                         .HasForeignKey("CashRegisterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CashRegisterDetailOpposite");
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Bank", b =>

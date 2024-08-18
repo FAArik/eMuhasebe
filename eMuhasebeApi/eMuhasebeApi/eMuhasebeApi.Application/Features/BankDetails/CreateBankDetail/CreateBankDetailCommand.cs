@@ -45,11 +45,11 @@ internal sealed class CreateBankDetailCommandHandler(IBankRepository bankReposit
                 Date = request.Date,
                 DepositAmount = request.Type == 1 ? request.OppositeAmount : 0,
                 WithdrawalAmount = request.Type == 0 ? request.OppositeAmount : 0,
-                BankDetailId = bankDetail.Id,
+                BankDetailOppositeId = bankDetail.Id,
                 Description = request.Description,
                 BankId = (Guid)request.OppositeBankId
             };
-            bankDetail.BankDetailId = oppositeBankDetail.Id;
+            bankDetail.BankDetailOppositeId = oppositeBankDetail.Id;
             await bankDetailRepository.AddAsync(oppositeBankDetail, cancellationToken);
         }
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);

@@ -54,8 +54,10 @@ export class BankDetailsComponent {
     });
   }
   getAllBanks() {
-    this.http.post<BankModel[]>("Bank/GetAll", {}, (res) => {
+    this.http.post<BankModel[]>("Banks/GetAll", {}, (res) => {
       this.banks = res.filter(x => x.id != this.bankId);
+      console.log(this.banks);
+      
     });
   }
 
@@ -63,9 +65,12 @@ export class BankDetailsComponent {
     if (form.valid) {
       this.createModel.amount = +this.createModel.amount;
       this.createModel.oppositeAmount = +this.createModel.oppositeAmount;
+
       if (this.createModel.recordType === 0) {
         this.createModel.oppositeBankId = null;
       }
+      if(this.createModel.oppositeAmount ===0) this.createModel.oppositeAmount =this.createModel.amount
+      
       this.http.post<string>("BankDetails/Create", this.createModel, (res) => {
         this.swal.callToast(res);
         this.createModalCloseBtn?.nativeElement.click();

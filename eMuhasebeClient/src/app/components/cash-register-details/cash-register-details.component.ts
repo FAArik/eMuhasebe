@@ -63,9 +63,13 @@ export class CashRegisterDetailsComponent {
     if (form.valid) {
       this.createModel.amount = +this.createModel.amount;
       this.createModel.oppositeAmount = +this.createModel.oppositeAmount;
+      
       if (this.createModel.recordType === 0) {
         this.createModel.oppositeCashRegisterId = null;
       }
+
+      if(this.createModel.oppositeAmount ===0) this.createModel.oppositeAmount =this.createModel.amount
+
       this.http.post<string>("CashRegisterDetails/Create", this.createModel, (res) => {
         this.swal.callToast(res);
         this.createModalCloseBtn?.nativeElement.click();

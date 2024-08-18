@@ -7,6 +7,10 @@ export class CompanyModel {
     isDeleted: boolean = false;
     database: DatabaseModel = new DatabaseModel();
 
+
+}
+
+export class LoginResponseCompanyModel{
     Id:string="";
     Name:string="";
 }

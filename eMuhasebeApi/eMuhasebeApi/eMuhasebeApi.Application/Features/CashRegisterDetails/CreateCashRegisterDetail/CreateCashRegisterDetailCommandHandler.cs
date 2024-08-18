@@ -38,11 +38,11 @@ internal sealed class CreateCashRegisterDetailCommandHandler(
                 Date = request.Date,
                 DepositAmount = request.Type == 1 ? request.OppositeAmount : 0,
                 WithdrawalAmount = request.Type == 0 ? request.OppositeAmount : 0,
-                CashRegisterDetailId = cashRegisterDetail.Id,
+                CashRegisterDetailOppositeId = cashRegisterDetail.Id,
                 Description = request.Description,
                 CashRegisterId = (Guid)request.OppositeCashRegisterId
             };
-            cashRegisterDetail.CashRegisterDetailId = oppositeCashRegisterDetail.Id;
+            cashRegisterDetail.CashRegisterDetailOppositeId = oppositeCashRegisterDetail.Id;
             await cashRegisterDetailRepository.AddAsync(oppositeCashRegisterDetail, cancellationToken);
         }
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
