@@ -39,7 +39,7 @@ namespace eMuhasebeApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.AppUser", b =>
@@ -112,7 +112,7 @@ namespace eMuhasebeApi.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Company", b =>
@@ -157,12 +157,12 @@ namespace eMuhasebeApi.Infrastructure.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("CompanyUsers");
+                    b.ToTable("CompanyUsers", (string)null);
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Company", b =>
                 {
-                    b.OwnsOne("eMuhasebeApi.WebAPI.ValueObject.Database", "Database", b1 =>
+                    b.OwnsOne("eMuhasebeApi.Domain.Entities.Company.Database#eMuhasebeApi.WebAPI.ValueObject.Database", "Database", b1 =>
                         {
                             b1.Property<Guid>("CompanyId")
                                 .HasColumnType("uniqueidentifier");
@@ -189,7 +189,7 @@ namespace eMuhasebeApi.Infrastructure.Migrations
 
                             b1.HasKey("CompanyId");
 
-                            b1.ToTable("Companies");
+                            b1.ToTable("Companies", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("CompanyId");

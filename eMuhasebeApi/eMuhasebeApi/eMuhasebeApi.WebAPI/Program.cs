@@ -56,6 +56,8 @@ app.UseCors();
 
 app.UseExceptionHandler();
 
+ExtensionsMiddleware.CreateFirstUser(app);
+
 app.MapControllers();
 
 app.Run();

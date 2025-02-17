@@ -5,6 +5,8 @@ using eMuhasebeApi.Application.Features.CashRegisters.CreateCashRegister;
 using eMuhasebeApi.Application.Features.CashRegisters.UpdateCashRegister;
 using eMuhasebeApi.Application.Features.Companies.CreateCompany;
 using eMuhasebeApi.Application.Features.Companies.UpdateCompany;
+using eMuhasebeApi.Application.Features.Customers.CreateCustomer;
+using eMuhasebeApi.Application.Features.Customers.UpdateCustomer;
 using eMuhasebeApi.Application.Features.Users.CreateUser;
 using eMuhasebeApi.Application.Features.Users.UpdateUser;
 using eMuhasebeApi.Domain.Entities;
@@ -17,18 +19,26 @@ namespace eMuhasebeApi.Application.Mapping
         public MappingProfile()
         {
             CreateMap<CreateUserCommand, AppUser>();
-            CreateMap<UpdateUserCommand,AppUser>();
+            CreateMap<UpdateUserCommand, AppUser>();
 
-            CreateMap<CreateCompanyCommand,Company>();
-            CreateMap<UpdateCompanyCommand,Company>();
+            CreateMap<CreateCompanyCommand, Company>();
+            CreateMap<UpdateCompanyCommand, Company>();
 
-            CreateMap<CreateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
-            CreateMap<UpdateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
+            CreateMap<CreateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType,
+                options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
+            CreateMap<UpdateCashRegisterCommand, CashRegister>().ForMember(x => x.CurrencyType,
+                options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
 
 
-            CreateMap<CreateBankCommand, Bank>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
-            CreateMap<UpdateBankCommand, Bank>().ForMember(x => x.CurrencyType, options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
+            CreateMap<CreateBankCommand, Bank>().ForMember(x => x.CurrencyType,
+                options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
+            CreateMap<UpdateBankCommand, Bank>().ForMember(x => x.CurrencyType,
+                options => options.MapFrom(map => CurrencyTypeEnum.FromValue(map.CurrencyTypeValue)));
 
+            CreateMap<CreateCustomerCommand, Customer>().ForMember(x => x.Type,
+                options => options.MapFrom(map => CustomerTypeEnum.FromValue(map.TypeValue)));
+            CreateMap<UpdateCustomerCommand, Customer>().ForMember(x => x.Type,
+                options => options.MapFrom(map => CustomerTypeEnum.FromValue(map.TypeValue)));
         }
     }
 }
