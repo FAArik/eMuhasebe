@@ -12,72 +12,77 @@ import { CashRegisterDetailsComponent } from './components/cash-register-details
 import { BanksComponent } from './components/banks/banks.component';
 import { BankDetailsComponent } from './components/bank-details/bank-details.component';
 import { CustomersComponent } from './components/customers/customers.component';
+import { CustomerDetailsComponent } from './components/customer-details/customer-details.component';
 
 export const routes: Routes = [
-    {
-        path: "login",
-        component: LoginComponent
-    },
-    {
-        path: "confirm-email/:email",
-        component: ConfirmEmailComponent
-    },
-    {
+  {
+    path: "login",
+    component: LoginComponent
+  },
+  {
+    path: "confirm-email/:email",
+    component: ConfirmEmailComponent
+  },
+  {
+    path: "",
+    component: LayoutsComponent,
+    canActivateChild: [() => inject(AuthService).isAuthenticated()],
+    children: [
+      {
         path: "",
-        component: LayoutsComponent,
-        canActivateChild: [() => inject(AuthService).isAuthenticated()],
+        component: HomeComponent
+      },
+      {
+        path: "users",
+        component: UsersComponent
+      },
+      {
+        path: "companies",
+        component: CompaniesComponent
+      },
+      {
+        path: "cash-registers",
         children: [
-            {
-                path: "",
-                component: HomeComponent
-            },
-            {
-                path: "users",
-                component: UsersComponent
-            },
-            {
-                path: "companies",
-                component: CompaniesComponent
-            },
-            {
-                path: "cash-registers",
-                children: [
-                    {
-                        path: "",
-                        pathMatch: "full",
-                        component: CashRegistersComponent
-                    },
-                    {
-                        path: "details/:id",
-                        component: CashRegisterDetailsComponent
-                    }
-                ]
-            },
-            {
-                path: "banks",
-                children: [
-                    {
-                        path: "",
-                        pathMatch: "full",
-                        component: BanksComponent
-                    },
-                    {
-                        path: "details/:id",
-                        component: BankDetailsComponent
-                    }
-                ]
-            },
-            {
-                path: "customers",
-                children: [
-                    {
-                        path: "",
-                        pathMatch: "full",
-                        component: CustomersComponent
-                    }
-                ]
-            },
-
+          {
+            path: "",
+            pathMatch: "full",
+            component: CashRegistersComponent
+          },
+          {
+            path: "details/:id",
+            component: CashRegisterDetailsComponent
+          }
         ]
-    }
+      },
+      {
+        path: "banks",
+        children: [
+          {
+            path: "",
+            pathMatch: "full",
+            component: BanksComponent
+          },
+          {
+            path: "details/:id",
+            component: BankDetailsComponent
+          }
+        ]
+      },
+      {
+        path: "customers",
+        children: [
+          {
+            path: "",
+            pathMatch: "full",
+            component: CustomersComponent
+          },
+          {
+            path: "details/:id",
+            component: CustomerDetailsComponent
+          }
+        ]
+      },
+
+    ]
+  }
 ];

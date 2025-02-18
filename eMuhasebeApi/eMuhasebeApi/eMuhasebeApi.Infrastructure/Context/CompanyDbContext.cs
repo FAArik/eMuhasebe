@@ -71,6 +71,7 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
     public DbSet<Bank> Banks { get; set; }
     public DbSet<BankDetail> BankDetails { get; set; }
     public DbSet<Customer> Customers{ get; set; }
+    public DbSet<CustomerDetail> CustomerDetails{ get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         #region cashRegister
@@ -84,7 +85,6 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
         #region cashRegisterDetail
         modelBuilder.Entity<CashRegisterDetail>().Property(p => p.DepositAmount).HasColumnType("money");
         modelBuilder.Entity<CashRegisterDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-        modelBuilder.Entity<CashRegisterDetail>().HasQueryFilter(x => !x.isDeleted);
         #endregion
 
         #region Bank
@@ -98,7 +98,6 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
         #region BankDetails
         modelBuilder.Entity<BankDetail>().Property(p => p.DepositAmount).HasColumnType("money");
         modelBuilder.Entity<BankDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
-        modelBuilder.Entity<BankDetail>().HasQueryFilter(x => !x.isDeleted);
         #endregion
 
         #region Customer
@@ -108,6 +107,11 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
         modelBuilder.Entity<Customer>().HasQueryFilter(x => !x.isDeleted);
         #endregion
 
+        #region CustomerDetails
+        modelBuilder.Entity<CustomerDetail>().Property(p => p.DepositAmount).HasColumnType("money");
+        modelBuilder.Entity<CustomerDetail>().Property(p => p.WithdrawalAmount).HasColumnType("money");
+        modelBuilder.Entity<CustomerDetail>().Property(p => p.Type).HasConversion(x=>x.Value,val =>CustomerDetailTypeEnum.FromValue(val));
+        #endregion
     }
 
 }

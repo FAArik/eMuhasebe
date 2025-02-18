@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eMuhasebeApi.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using eMuhasebeApi.Infrastructure.Context;
 namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    partial class CompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250218050128_customer_details")]
+    partial class customer_details
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,8 +231,6 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
-
                     b.ToTable("CustomerDetails");
                 });
 
@@ -251,26 +252,12 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("eMuhasebeApi.Domain.Entities.CustomerDetail", b =>
-                {
-                    b.HasOne("eMuhasebeApi.Domain.Entities.Customer", null)
-                        .WithMany("Details")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Bank", b =>
                 {
                     b.Navigation("Details");
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.CashRegister", b =>
-                {
-                    b.Navigation("Details");
-                });
-
-            modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("Details");
                 });
