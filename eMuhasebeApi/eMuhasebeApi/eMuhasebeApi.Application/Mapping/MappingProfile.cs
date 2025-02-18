@@ -7,6 +7,8 @@ using eMuhasebeApi.Application.Features.Companies.CreateCompany;
 using eMuhasebeApi.Application.Features.Companies.UpdateCompany;
 using eMuhasebeApi.Application.Features.Customers.CreateCustomer;
 using eMuhasebeApi.Application.Features.Customers.UpdateCustomer;
+using eMuhasebeApi.Application.Features.Products.CreateProduct;
+using eMuhasebeApi.Application.Features.Products.UpdateProduct;
 using eMuhasebeApi.Application.Features.Users.CreateUser;
 using eMuhasebeApi.Application.Features.Users.UpdateUser;
 using eMuhasebeApi.Domain.Entities;
@@ -39,6 +41,9 @@ namespace eMuhasebeApi.Application.Mapping
                 options => options.MapFrom(map => CustomerTypeEnum.FromValue(map.TypeValue)));
             CreateMap<UpdateCustomerCommand, Customer>().ForMember(x => x.Type,
                 options => options.MapFrom(map => CustomerTypeEnum.FromValue(map.TypeValue)));
+
+            CreateMap<CreateProductCommand, Product>();
+            CreateMap<UpdateProductCommand, Product>();
         }
     }
 }

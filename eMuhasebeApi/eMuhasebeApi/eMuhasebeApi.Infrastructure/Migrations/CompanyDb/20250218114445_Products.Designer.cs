@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eMuhasebeApi.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using eMuhasebeApi.Infrastructure.Context;
 namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    partial class CompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250218114445_Products")]
+    partial class Products
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -251,15 +254,9 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Deposit")
-                        .HasColumnType("decimal(7,2)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Withdrawal")
-                        .HasColumnType("decimal(7,2)");
 
                     b.Property<bool>("isDeleted")
                         .HasColumnType("bit");
@@ -267,38 +264,6 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
                     b.HasKey("Id");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("eMuhasebeApi.Domain.Entities.ProductDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<decimal>("Deposit")
-                        .HasColumnType("decimal(7,2)");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Withdrawal")
-                        .HasColumnType("decimal(7,2)");
-
-                    b.Property<bool>("isDeleted")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductDetail");
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.BankDetail", b =>
@@ -328,15 +293,6 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("eMuhasebeApi.Domain.Entities.ProductDetail", b =>
-                {
-                    b.HasOne("eMuhasebeApi.Domain.Entities.Product", null)
-                        .WithMany("Details")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Bank", b =>
                 {
                     b.Navigation("Details");
@@ -348,11 +304,6 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
                 });
 
             modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Customer", b =>
-                {
-                    b.Navigation("Details");
-                });
-
-            modelBuilder.Entity("eMuhasebeApi.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Details");
                 });

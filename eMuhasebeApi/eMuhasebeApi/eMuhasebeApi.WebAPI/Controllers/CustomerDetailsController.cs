@@ -1,12 +1,10 @@
 ﻿using eMuhasebeApi.Application.Features.CustomerDetails.GetAllCustomerDetails;
 using eMuhasebeApi.WebAPI.Abstractions;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMuhasebeApi.WebAPI.Controllers;
 
-[AllowAnonymous]
 public class CustomerDetailsController : ApiController
 {
     public CustomerDetailsController(IMediator mediator) : base(mediator)

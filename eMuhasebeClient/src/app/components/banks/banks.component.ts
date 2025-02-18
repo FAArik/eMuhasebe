@@ -16,7 +16,7 @@ import { NgForm } from '@angular/forms';
   styleUrl: './banks.component.css'
 })
 export class BanksComponent {
-  Banks: BankModel[] = [];
+  banks: BankModel[] = [];
   search: string = "";
   currencyTypes = CurrencyTypes;
 
@@ -37,7 +37,7 @@ export class BanksComponent {
 
   getAll() {
     this.http.post<BankModel[]>("Banks/GetAll", {}, (res) => {
-      this.Banks = res;
+      this.banks = res;
     });
   }
 

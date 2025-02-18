@@ -4,12 +4,10 @@ using eMuhasebeApi.Application.Features.Banks.GetAllBanks;
 using eMuhasebeApi.Application.Features.Banks.UpdateBank;
 using eMuhasebeApi.WebAPI.Abstractions;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eMuhasebeApi.WebAPI.Controllers;
 
-[AllowAnonymous]
 public class BanksController : ApiController
 {
     public BanksController(IMediator mediator) : base(mediator)
