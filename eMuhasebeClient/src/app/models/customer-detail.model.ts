@@ -5,6 +5,8 @@ export class CustomerDetailModel {
   depositAmount: number = 0;
   withdrawalAmount: number = 0;
   description: string = "";
+  bankDetailId:string="";
+  cashRegisterDetailId:string="";
 }
 
 export class CustomerDetailTypeEnum {

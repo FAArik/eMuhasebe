@@ -9,10 +9,12 @@ export class CashRegisterDetailModel {
     amount: number = 0;
     depositAmount: number = 0;
     withdrawalAmount: number = 0;
-    cashRegisterDetailId: string = "";    
+    cashRegisterDetailId: string = "";
     bankDetailId: string = "";
-    oppositeCashRegisterId: string | any = "";    
-    oppositeBankId: string | any = "";    
+    customerDetailId:string="";
+    oppositeCashRegisterId: string | any = "";
+    oppositeBankId: string | any = "";
+    oppositeCustomerId: string | any = "";
     oppositeCashRegister: CashRegisterModel = new CashRegisterModel();
     oppositeBank: BankModel = new BankModel();
     description: string = "";

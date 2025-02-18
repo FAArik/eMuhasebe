@@ -10,7 +10,6 @@ public sealed class BankDetail : Entity
     public Decimal DepositAmount { get; set; }
     public Decimal WithdrawalAmount { get; set; }
     public Guid? BankDetailId { get; set; }
-    //public BankDetail? BankDetailOpposite { get; set; } 
     public Guid? CashRegisterDetailId { get; set; }
-
+    public Guid? CustomerDetailId { get; set; }
 }

@@ -11,4 +11,6 @@ public sealed class CustomerDetail : Entity
     public string Description { get; set; } = string.Empty;
     public Decimal DepositAmount { get; set; }
     public Decimal WithdrawalAmount { get; set; }
+    public Guid BankDetailId { get; set; }
+    public Guid CashRegisterDetailId { get; set; }
 }

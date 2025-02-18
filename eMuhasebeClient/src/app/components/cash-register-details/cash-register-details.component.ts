@@ -9,6 +9,7 @@ import { SharedModule } from '../../modules/shared.module';
 import { CashRegisterDetailPipe } from '../../pipes/cash-register-detail.pipe';
 import { DatePipe } from '@angular/common';
 import { BankModel } from '../../models/bank.model';
+import { CustomerModel } from '../../models/customer.model';
 
 @Component({
   selector: 'app-cash-register-details',
@@ -22,6 +23,7 @@ export class CashRegisterDetailsComponent {
   cashRegister: CashRegisterModel = new CashRegisterModel();
   cashregisters: CashRegisterModel[] = [];
   banks: BankModel[] = [];
+  customers: CustomerModel[] = [];
   cashRegisterId: string = "";
   search: string = "";
   startDate: string = "";
@@ -48,6 +50,7 @@ export class CashRegisterDetailsComponent {
       this.getAll();
       this.getAllCashRegisters();
       this.getAllBanks();
+      this.getAllCustomers();
     });
   }
 
@@ -66,22 +69,34 @@ export class CashRegisterDetailsComponent {
       this.banks = res;
     });
   }
+  getAllCustomers() {
+    this.http.post<CustomerModel[]>("Customers/GetAll", {}, (res) => {
+      this.customers = res;
+    });
+  }
 
   create(form: NgForm) {
     if (form.valid) {
       this.createModel.amount = +this.createModel.amount;
       this.createModel.oppositeAmount = +this.createModel.oppositeAmount;
-      
+
       if (this.createModel.recordType == 0) {
         this.createModel.oppositeBankId = null;
         this.createModel.oppositeCashRegisterId = null;
+        this.createModel.oppositeCustomerId = null;
       } else if (this.createModel.recordType == 1) {
         this.createModel.oppositeBankId = null;
-      }else if (this.createModel.recordType == 2) {
+        this.createModel.oppositeCustomerId = null;
+      } else if (this.createModel.recordType == 2) {
+        this.createModel.oppositeCashRegisterId = null;
+        this.createModel.oppositeCustomerId = null;
+      }
+      else if (this.createModel.recordType == 3) {
+        this.createModel.oppositeBankId = null;
         this.createModel.oppositeCashRegisterId = null;
       }
 
-      if(this.createModel.oppositeAmount ===0) this.createModel.oppositeAmount =this.createModel.amount
+      if (this.createModel.oppositeAmount === 0) this.createModel.oppositeAmount = this.createModel.amount
 
       this.http.post<string>("CashRegisterDetails/Create", this.createModel, (res) => {
         this.swal.callToast(res);
@@ -143,7 +158,7 @@ export class CashRegisterDetailsComponent {
       this.createModel.oppositeCashRegister = cash;
     }
   }
-  
+
   setOppositeBank() {
     const bank = this.banks.find(x => x.id == this.createModel.oppositeBankId);
     if (bank) {
