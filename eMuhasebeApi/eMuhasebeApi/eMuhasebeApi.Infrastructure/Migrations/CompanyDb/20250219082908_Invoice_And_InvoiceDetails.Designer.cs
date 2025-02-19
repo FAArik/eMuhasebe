@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eMuhasebeApi.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using eMuhasebeApi.Infrastructure.Context;
 namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    partial class CompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250219082908_Invoice_And_InvoiceDetails")]
+    partial class Invoice_And_InvoiceDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,9 +232,6 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("InvoiceId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
@@ -347,9 +347,6 @@ namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("InvoiceId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("ProductId")
                         .HasColumnType("uniqueidentifier");

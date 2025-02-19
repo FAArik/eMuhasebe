@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eMuhasebeApi.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using eMuhasebeApi.Infrastructure.Context;
 namespace eMuhasebeApi.Infrastructure.Migrations.CompanyDb
 {
     [DbContext(typeof(CompanyDbContext))]
-    partial class CompanyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250219092200_Invoice_tracking_by_Id")]
+    partial class Invoice_tracking_by_Id
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

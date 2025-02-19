@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace eMuhasebeApi.Infrastructure.Context;
 
-internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
+public sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
 {
     #region connection
 
@@ -78,6 +78,9 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
     public DbSet<Customer> Customers { get; set; }
     public DbSet<CustomerDetail> CustomerDetails { get; set; }
     public DbSet<Product> Products { get; set; }
+    public DbSet<ProductDetail> ProductDetails { get; set; }
+    public DbSet<Invoice> Invoices { get; set; }
+    public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -150,6 +153,23 @@ internal sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
         modelBuilder.Entity<Product>().HasQueryFilter(x => !x.isDeleted);
         modelBuilder.Entity<Product>().Property(x => x.Deposit).HasColumnType("decimal(7,2)");
         modelBuilder.Entity<Product>().Property(x => x.Withdrawal).HasColumnType("decimal(7,2)");
+
+        #endregion
+
+        #region Invoice
+
+        modelBuilder.Entity<Invoice>().Property(x => x.Amount).HasColumnType("money");
+        modelBuilder.Entity<Invoice>().Property(x => x.Type)
+            .HasConversion(x => x.Value, val => InvoiceTypeEnum.FromValue(val));
+        modelBuilder.Entity<Invoice>().HasQueryFilter(x => !x.isDeleted);
+        modelBuilder.Entity<Invoice>().HasQueryFilter(x => !x.Customer!.isDeleted);
+
+        #endregion
+
+        #region InvoiceDetails
+
+        modelBuilder.Entity<InvoiceDetail>().Property(x => x.Quantity).HasColumnType("decimal(7,2)");
+        modelBuilder.Entity<InvoiceDetail>().Property(x => x.Price).HasColumnType("money");
 
         #endregion
     }

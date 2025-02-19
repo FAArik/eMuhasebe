@@ -7,6 +7,7 @@ using eMuhasebeApi.Application.Features.Companies.CreateCompany;
 using eMuhasebeApi.Application.Features.Companies.UpdateCompany;
 using eMuhasebeApi.Application.Features.Customers.CreateCustomer;
 using eMuhasebeApi.Application.Features.Customers.UpdateCustomer;
+using eMuhasebeApi.Application.Features.Invoices.CreateInvoice;
 using eMuhasebeApi.Application.Features.Products.CreateProduct;
 using eMuhasebeApi.Application.Features.Products.UpdateProduct;
 using eMuhasebeApi.Application.Features.Users.CreateUser;
@@ -44,6 +45,19 @@ namespace eMuhasebeApi.Application.Mapping
 
             CreateMap<CreateProductCommand, Product>();
             CreateMap<UpdateProductCommand, Product>();
+
+            CreateMap<CreateInvoiceCommand, Invoice>()
+                .ForMember(x => x.Type, opt => { opt.MapFrom(m => InvoiceTypeEnum.FromValue(m.TypeValue)); })
+                .ForMember(x => x.Details, opt =>
+                {
+                    opt.MapFrom(m => m.InvoiceDetails.Select(s => new InvoiceDetail()
+                    {
+                        ProductId = s.ProductId,
+                        Quantity = s.Quantity,
+                        Price = s.Price,
+                    }).ToList());
+                }).ForMember(x => x.Amount,
+                    opt => { opt.MapFrom(m => m.InvoiceDetails.Sum(s => s.Quantity * s.Price)); });
         }
     }
 }
