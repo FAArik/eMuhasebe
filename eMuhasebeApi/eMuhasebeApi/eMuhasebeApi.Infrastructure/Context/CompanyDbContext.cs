@@ -144,7 +144,9 @@ public sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
         modelBuilder.Entity<ProductDetail
         >().Property(x => x.Deposit).HasColumnType("decimal(7,2)");
         modelBuilder.Entity<ProductDetail
-        >().Property(x => x.Withdrawal).HasColumnType("decimal(7,2)");
+        >().Property(x => x.Withdrawal).HasColumnType("decimal(7,2)"); 
+        modelBuilder.Entity<ProductDetail
+        >().Property(x => x.Price).HasColumnType("money");
 
         #endregion
 
@@ -170,6 +172,7 @@ public sealed class CompanyDbContext : DbContext, IUnitOfWorkCompany
 
         modelBuilder.Entity<InvoiceDetail>().Property(x => x.Quantity).HasColumnType("decimal(7,2)");
         modelBuilder.Entity<InvoiceDetail>().Property(x => x.Price).HasColumnType("money");
+        modelBuilder.Entity<InvoiceDetail>().HasQueryFilter(x => !x.Product!.isDeleted);
 
         #endregion
     }

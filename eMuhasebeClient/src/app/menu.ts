@@ -79,5 +79,13 @@ export const Menus: MenuModel[] = [
     isTitle: false,
     subMenus: [],
     showThisMenuJustAdmin: true
+  },
+  {
+    name: "Faturalar",
+    icon: "fa-solid fa-file",
+    url: "/invoices",
+    isTitle: false,
+    subMenus: [],
+    showThisMenuJustAdmin: true
   }
 ]

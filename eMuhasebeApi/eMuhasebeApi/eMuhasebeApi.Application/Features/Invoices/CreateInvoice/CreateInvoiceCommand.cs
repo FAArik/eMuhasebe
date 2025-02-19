@@ -14,7 +14,7 @@ public sealed record CreateInvoiceCommand(
     DateOnly Date,
     string InvoiceNumber,
     Guid CustomerId,
-    List<InvoiceDetailDto> InvoiceDetails
+    List<InvoiceDetailDto> Details
 ) : IRequest<Result<string>>;
 
 internal sealed class CreateInvoiceCommandHandler(
@@ -41,7 +41,7 @@ internal sealed class CreateInvoiceCommandHandler(
         #region Customer
 
         Customer? customer =
-            await customerRepository.GetByExpressionWithTrackingAsync(x => x.Id == request.CustomerId,
+            await customerRepository.GetByExpressionAsync(x => x.Id == request.CustomerId,
                 cancellationToken);
 
         if (customer is null)
@@ -51,6 +51,8 @@ internal sealed class CreateInvoiceCommandHandler(
 
         customer.DepositAmount += request.TypeValue == 2 ? invoice.Amount : 0;
         customer.WithdrawalAmount += request.TypeValue == 1 ? invoice.Amount : 0;
+
+        customerRepository.Update(customer);
 
         CustomerDetail customerDetail = new()
         {
@@ -70,7 +72,7 @@ internal sealed class CreateInvoiceCommandHandler(
 
         #region Product
 
-        foreach (var detail in request.InvoiceDetails)
+        foreach (var detail in request.Details)
         {
             Product product =
                 await productRepository.GetByExpressionWithTrackingAsync(x => x.Id == detail.ProductId,
@@ -86,9 +88,10 @@ internal sealed class CreateInvoiceCommandHandler(
                 Description = invoice.InvoiceNumber + " Numaralı " + invoice.Type.Name,
                 Deposit = request.TypeValue == 1 ? detail.Quantity : 0,
                 Withdrawal = request.TypeValue == 2 ? detail.Quantity : 0,
-                InvoiceId = invoice.Id
+                InvoiceId = invoice.Id,
+                Price = detail.Price
             };
-            await productRepository.AddAsync(product, cancellationToken);
+            productRepository.Update(product);
             await productDetailRepository.AddAsync(productDetail, cancellationToken);
         }
 
@@ -96,8 +99,7 @@ internal sealed class CreateInvoiceCommandHandler(
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
-        cacheService.Remove("sellingInvoices");
-        cacheService.Remove("purchaseInvoices");
+        cacheService.Remove("invoices");
         cacheService.Remove("customers");
         cacheService.Remove("products");
         return invoice.Type.Name + " kaydı başarıyla tamamlandı";

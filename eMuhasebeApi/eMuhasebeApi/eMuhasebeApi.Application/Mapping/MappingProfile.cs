@@ -50,14 +50,14 @@ namespace eMuhasebeApi.Application.Mapping
                 .ForMember(x => x.Type, opt => { opt.MapFrom(m => InvoiceTypeEnum.FromValue(m.TypeValue)); })
                 .ForMember(x => x.Details, opt =>
                 {
-                    opt.MapFrom(m => m.InvoiceDetails.Select(s => new InvoiceDetail()
+                    opt.MapFrom(m => m.Details.Select(s => new InvoiceDetail()
                     {
                         ProductId = s.ProductId,
                         Quantity = s.Quantity,
                         Price = s.Price,
                     }).ToList());
                 }).ForMember(x => x.Amount,
-                    opt => { opt.MapFrom(m => m.InvoiceDetails.Sum(s => s.Quantity * s.Price)); });
+                    opt => { opt.MapFrom(m => m.Details.Sum(s => s.Quantity * s.Price)); });
         }
     }
 }

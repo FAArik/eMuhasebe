@@ -15,6 +15,7 @@ import { CustomersComponent } from './components/customers/customers.component';
 import { CustomerDetailsComponent } from './components/customer-details/customer-details.component';
 import { ProductComponent } from './components/product/product.component';
 import { ProductDetailsComponent } from './components/product-details/product-details.component';
+import { InvoicesComponent } from './components/invoices/invoices.component';
 
 export const routes: Routes = [
   {
@@ -98,7 +99,16 @@ export const routes: Routes = [
 
         ]
       },
-
+      {
+        path: "invoices",
+        children: [
+          {
+            path: "",
+            pathMatch: "full",
+            component: InvoicesComponent
+          }
+        ]
+      },
     ]
   }
 ];

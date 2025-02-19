@@ -6,4 +6,5 @@ export class ProductModel {
   deposit: number = 0;
   withdrawal: number = 0;
   details: ProductDetailModel[] = [];
+
 }

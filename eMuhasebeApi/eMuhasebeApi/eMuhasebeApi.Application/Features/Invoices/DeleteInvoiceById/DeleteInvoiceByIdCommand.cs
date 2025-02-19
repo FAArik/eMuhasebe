@@ -62,14 +62,13 @@ internal sealed class DeleteInvoiceByIdCommandHandler(
                 product.Withdrawal -= invoice.Type.Value == 2 ? invoice.Amount : 0;
                 productRepository.Update(product);
             }
-        }
+        } 
 
         productDetailRepository.DeleteRange(productDetails);
-
+        invoiceRepository.Delete(invoice);
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
 
-        cacheService.Remove("sellingInvoices");
-        cacheService.Remove("purchaseInvoices");
+        cacheService.Remove("invoices");
         cacheService.Remove("customers");
         cacheService.Remove("products");
 
