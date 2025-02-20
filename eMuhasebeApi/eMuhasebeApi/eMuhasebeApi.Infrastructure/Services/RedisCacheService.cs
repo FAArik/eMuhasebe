@@ -33,4 +33,20 @@ public sealed class RedisCacheService : ICacheService
         var serializedValue = JsonConvert.SerializeObject(value);
         _database.StringSet(key, serializedValue, expiry);
     }
+    
+    public void RemoveAll()
+    {
+        List<string> keys = new List<string>()
+        {
+            "cashRegisters",
+            "banks",
+            "invoices",
+            "products",
+            "customers"
+        };
+        foreach (var key in keys)
+        {
+            _database.KeyDelete(key);
+        }
+    }
 }

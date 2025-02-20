@@ -5,7 +5,6 @@ namespace eMuhasebeApi.Infrastructure.Services;
 
 public sealed class MemoryCacheService(IMemoryCache cache) : ICacheService
 {
-
     public T? Get<T>(string key)
     {
         cache.TryGetValue<T>(key, out var value);
@@ -25,6 +24,21 @@ public sealed class MemoryCacheService(IMemoryCache cache) : ICacheService
             AbsoluteExpirationRelativeToNow = expiry ?? TimeSpan.FromHours(1),
         };
         cache.Set(key, value, cacheEntryOptions);
+    }
 
+    public void RemoveAll()
+    {
+        List<string> keys = new List<string>()
+        {
+            "cashRegisters",
+            "banks",
+            "invoices",
+            "products",
+            "customers"
+        };
+        foreach (var key in keys)
+        {
+            cache.Remove(key);
+        }
     }
 }
