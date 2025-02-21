@@ -75,7 +75,7 @@ internal sealed class CreateInvoiceCommandHandler(
         foreach (var detail in request.Details)
         {
             Product product =
-                await productRepository.GetByExpressionWithTrackingAsync(x => x.Id == detail.ProductId,
+                await productRepository.GetByExpressionAsync(x => x.Id == detail.ProductId,
                     cancellationToken);
 
             product.Deposit += request.TypeValue == 1 ? detail.Quantity : 0;

@@ -16,6 +16,7 @@ import { NgForm } from '@angular/forms';
 export class CustomersComponent {
   customers: CustomerModel[] = [];
   search: string = '';
+  p:number=1;
   customerTypes = customerTypes
 
   @ViewChild('createModalCloseBtn') createModalCloseBtn:

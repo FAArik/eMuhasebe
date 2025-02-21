@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TrCurrencyPipe } from 'tr-currency';
 import { FormValidateDirective } from 'form-validate-angular';
 import { RouterModule } from '@angular/router';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 
@@ -18,7 +19,8 @@ import { RouterModule } from '@angular/router';
     SectionComponent,
     FormsModule,
     TrCurrencyPipe,
-    FormValidateDirective
+    FormValidateDirective,
+    NgxPaginationModule
   ],
   exports: [
     CommonModule,
@@ -27,7 +29,8 @@ import { RouterModule } from '@angular/router';
     SectionComponent,
     FormsModule,
     TrCurrencyPipe,
-    FormValidateDirective
+    FormValidateDirective,
+    NgxPaginationModule
   ]
 })
 export class SharedModule { }

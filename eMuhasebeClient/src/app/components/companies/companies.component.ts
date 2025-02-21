@@ -38,8 +38,15 @@ export class CompaniesComponent {
     });
   }
   migrateCompanyDatabases() {
-    this.http.get<CompanyModel[]>("Companies/MigrateAll",(res:any) => {
+    this.http.get<CompanyModel[]>("Companies/MigrateAll", (res: any) => {
     });
+  }
+  seedData() {
+    this.swal.callSwal("Seed Data oluştur?", `Bu şirket için fake veri oluşturmak istiyor musunuz?`, () => {
+      this.http.get<string>("SeedData/Create", (res: any) => {
+        this.swal.callToast(res)
+      });
+    }, "Onayla")
   }
 
   create(form: NgForm) {
