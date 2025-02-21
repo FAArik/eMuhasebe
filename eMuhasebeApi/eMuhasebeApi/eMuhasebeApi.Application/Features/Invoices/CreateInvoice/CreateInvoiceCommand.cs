@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using eMuhasebeApi.Application.Hubs;
 using eMuhasebeApi.Application.Services;
 using eMuhasebeApi.Domain.Dtos;
 using eMuhasebeApi.Domain.Entities;
 using eMuhasebeApi.Domain.Enums;
 using eMuhasebeApi.Domain.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.SignalR;
 using TS.Result;
 
 namespace eMuhasebeApi.Application.Features.Invoices.CreateInvoice;
@@ -25,7 +27,8 @@ internal sealed class CreateInvoiceCommandHandler(
     ICustomerDetailRepository customerDetailRepository,
     IUnitOfWorkCompany unitOfWorkCompany,
     ICacheService cacheService,
-    IMapper mapper
+    IMapper mapper,
+    IHubContext<ReportHub> reportHub
 ) : IRequestHandler<CreateInvoiceCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(CreateInvoiceCommand request, CancellationToken cancellationToken)
@@ -98,6 +101,12 @@ internal sealed class CreateInvoiceCommandHandler(
         #endregion
 
         await unitOfWorkCompany.SaveChangesAsync(cancellationToken);
+
+        if (invoice.Type == InvoiceTypeEnum.Selling)
+        {
+            await reportHub.Clients.All.SendAsync("PurchaseReports",
+                new { Date = invoice.Date, Amount = invoice.Amount });
+        }
 
         cacheService.Remove("invoices");
         cacheService.Remove("customers");

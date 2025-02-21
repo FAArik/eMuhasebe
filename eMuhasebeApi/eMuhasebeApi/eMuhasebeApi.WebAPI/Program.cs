@@ -1,5 +1,6 @@
 using DefaultCorsPolicyNugetPackage;
 using eMuhasebeApi.Application;
+using eMuhasebeApi.Application.Hubs;
 using eMuhasebeApi.Infrastructure;
 using eMuhasebeApi.WebAPI.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,5 +60,7 @@ app.UseExceptionHandler();
 ExtensionsMiddleware.CreateFirstUser(app);
 
 app.MapControllers();
+
+app.MapHub<ReportHub>("report-hub");
 
 app.Run();
